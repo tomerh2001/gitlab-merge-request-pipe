@@ -7,6 +7,6 @@ LABEL org.opencontainers.image.source $GH_REPO
 
 WORKDIR /app
 
-COPY package.json bun.lockb index.ts ./
+COPY package.json bun.lockb index.ts /app/
 RUN bun i
 CMD ["bun", "run", "index.ts"]

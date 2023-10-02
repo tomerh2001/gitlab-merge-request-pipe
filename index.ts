@@ -1,6 +1,6 @@
 import {Gitlab} from '@gitbeaker/rest';
 import git from 'simple-git';
-import packageJson from '../package.json';
+import packageJson from './package.json';
 
 function getConfig() {
 	return {
