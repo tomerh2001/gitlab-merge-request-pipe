@@ -1,3 +1,10 @@
+# 1.0.0 (2023-10-02)
+
+
+### Features
+
+* updated index.js ([f378ad5](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/f378ad5c88294ca03e4537c0242d670a04a1064e))
+
 # [1.7.0](https://github.com/tomerh2001/semantic-release-repo-template/compare/v1.6.1...v1.7.0) (2023-10-01)
 
 
