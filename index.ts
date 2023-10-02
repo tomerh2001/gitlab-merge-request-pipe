@@ -9,7 +9,9 @@ function getConfig() {
 		gitlabToken: process.env.GITLAB_TOKEN,
 		projectId: process.env.GITLAB_PROJECT_ID,
 		sourceBranch: process.env.GITLAB_SOURCE_BRANCH || 'release/v' + (process.env.VERSION || packageJson.version),
+		targetBranch: process.env.GITLAB_TARGET_BRANCH || 'main',
 		pushSourceBranch: process.env.PUSH_SOURCE_BRANCH || true,
+		createMergeRequest: process.env.CREATE_MERGE_REQUEST || true,
 		mergeDescription: process.env.GITLAB_MERGE_DESCRIPTION || null,
 		sslVerify: process.env.SSL_VERIFY || false,
 	};
@@ -73,3 +75,17 @@ if (!config.mergeDescription)
 	console.debug(config.mergeDescription)
 }
 
+if (config.createMergeRequest) 
+{
+	const {web_url: webUrl} = await gitlab.MergeRequests.create(
+		config.projectId,
+		config.sourceBranch, 
+		config.targetBranch, 
+		`Release v${config.version}`, 
+		{
+			removeSourceBranch: true,
+			description: config.mergeDescription,
+		}
+	);
+	console.log(`Merge request created at`, webUrl);
+}
