@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.3.0...v1.4.0) (2023-10-02)
+
+
+### Features
+
+* :sparkles: merge description will now use the changelog diff between the last local tag and last gitlab tag ([6fd4cae](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/6fd4cae35a3e28bdaa6c0608ba5e128943f52faa))
+
 # [1.3.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.2.4...v1.3.0) (2023-10-02)
 
 
