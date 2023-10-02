@@ -11,13 +11,13 @@ Bitbucket pipe for creating a GitLab merge request.
 
 Add this pipe to your `bitbucket-pipelines.yml`:
 
-\```yaml
+```yaml
 script:
   - pipe: docker://tomerh2001/gitlab-merge-request-pipe:latest
     variables:
       GITLAB_TOKEN: 'Your_GitLab_Private_Token'
       GITLAB_PROJECT_ID: 'Your_Project_ID'
-\```
+```
 
 ## Variables
 
