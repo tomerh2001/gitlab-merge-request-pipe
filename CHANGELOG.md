@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.2.4...v1.3.0) (2023-10-02)
+
+
+### Features
+
+* :lipstick: added pino logger ([e9d010e](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/e9d010ea6293d9b721acaf2a7d3e305c1e850ff8))
+
 ## [1.2.4](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.2.3...v1.2.4) (2023-10-02)
 
 
