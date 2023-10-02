@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.2.0...v1.2.1) (2023-10-02)
+
+
+### Bug Fixes
+
+* :lipstick: applied xo auto fixes ([c933311](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/c93331183b4d294871f69114265126094bd41b3c))
+
 # [1.2.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.1.0...v1.2.0) (2023-10-02)
 
 
