@@ -56,7 +56,6 @@ const config = getConfig();
 logger.info(config, 'Started');
 
 const gitlab = new Gitlab({host: config.gitlabUrl, token: config.gitlabToken!});
-
 const simpleGit = git({config: [`http.sslVerify=${config.sslVerify}`]});
 
 const project = await gitlab.Projects.show(config.projectId!);
