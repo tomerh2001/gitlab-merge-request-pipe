@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.2.1...v1.2.2) (2023-10-02)
+
+
+### Bug Fixes
+
+* updated dockerfile ([3b82974](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/3b82974b3547272b33459766c09e29c2d945f0ef))
+
 ## [1.2.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.2.0...v1.2.1) (2023-10-02)
 
 
