@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.2.3...v1.2.4) (2023-10-02)
+
+
+### Bug Fixes
+
+* **docker:** :technologist: added back workdir at /repo ([1c26155](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/1c26155deed00c84916f5500c4bde20f26db71fe))
+
 ## [1.2.3](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.2.2...v1.2.3) (2023-10-02)
 
 
