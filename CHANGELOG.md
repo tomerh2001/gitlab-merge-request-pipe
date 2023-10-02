@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.1.0...v1.2.0) (2023-10-02)
+
+
+### Features
+
+* **docker:** :arrow_up: changed dockerfile to alpine ([725c1ea](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/725c1ea056e44f6876c27815e1b6d5239104ce7a))
+
 # [1.1.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.0.0...v1.1.0) (2023-10-02)
 
 
