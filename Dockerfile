@@ -1,4 +1,4 @@
-FROM bun/oven:latest
+FROM oven/bun:latest
 
 ARG GH_REPO
 ARG RELEASE_NOTES
