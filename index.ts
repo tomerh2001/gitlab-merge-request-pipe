@@ -9,7 +9,8 @@ function getConfig() {
 		gitlabToken: process.env.GITLAB_TOKEN,
 		projectId: process.env.GITLAB_PROJECT_ID,
 		sourceBranch: process.env.GITLAB_SOURCE_BRANCH || 'release/v' + (process.env.VERSION || packageJson.version),
-		pushSourceBranch: process.env.PUSH_SOURCE_BRANCH || true
+		pushSourceBranch: process.env.PUSH_SOURCE_BRANCH || true,
+		sslVerify: process.env.SSL_VERIFY || false
 	};
 }
 
@@ -17,7 +18,7 @@ const config = getConfig();
 console.debug('Running with config:', config)
 
 const gitlab = new Gitlab({host: config.gitlabUrl, token: config.gitlabToken});
-const simpleGit = git({config: ['http.sslVerify=false']});
+const simpleGit = git({config: [`http.sslVerify=${config.sslVerify}`]});
 
 const project = await gitlab.Projects.show(config.projectId);
 const repoUrl = `${config.gitlabUrl}/${project.path_with_namespace}.git`.replace('https://', `https://gitlab-ci-token:${config.gitlabToken}@`);
@@ -34,3 +35,4 @@ if (config.pushSourceBranch)
 	await simpleGit.push(['-f', 'gitlab', `HEAD:${config.sourceBranch}`]);
 	console.log(`Pushed the current state as "${config.sourceBranch}" to `, repoUrl);
 }
+
