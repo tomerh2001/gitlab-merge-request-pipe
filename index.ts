@@ -9,7 +9,7 @@ import packageJson from './package.json';
 // eslint-disable-next-line new-cap
 const logger = pino(PinoPretty({ignore: 'pid,hostname'}));
 
-function getConfig() {
+export function getConfig() {
 	return {
 		version: process.env.VERSION ?? packageJson.version,
 		gitlabUrl: process.env.GITLAB_URL ?? 'https://gitlab.com',
@@ -24,7 +24,7 @@ function getConfig() {
 	};
 }
 
-async function getChangelog() {
+export async function getChangelog() {
 	try {
 		const localTags = await simpleGit.tags();
 		if (localTags.all.length === 0) {
@@ -51,7 +51,7 @@ async function getChangelog() {
 			return null;
 		}
 
-		logger.info({previousTag, currentTag}, 'Getting CNANGELOG diff between tags');
+		logger.info({previousTag, currentTag}, 'Getting CHANGELOG diff between tags');
 		const changelogDiff = await simpleGit.diff([`${previousTag}..${currentTag}`, '--', 'CHANGELOG.md']);
 		const addedLines = changelogDiff.split('\n').filter(line => line.startsWith('+') && !line.startsWith('+++'));
 
@@ -97,7 +97,7 @@ if (config.createMergeRequest) {
 		`Release v${config.version}`,
 		{
 			removeSourceBranch: true,
-			description: config.mergeDescription,
+			description: config.mergeDescription!,
 		},
 	);
 	logger.info(`Merge request created at ${webUrl}`);
