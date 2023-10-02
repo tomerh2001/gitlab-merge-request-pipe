@@ -19,5 +19,9 @@
   "version": "1.0.0",
   "scripts": {
     "test": "xo"
+  },
+  "dependencies": {
+    "@gitbeaker/rest": "^39.16.0",
+    "simple-git": "^3.20.0"
   }
 }
