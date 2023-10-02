@@ -5,6 +5,8 @@ ARG RELEASE_NOTES
 
 LABEL org.opencontainers.image.source $GH_REPO
 
-COPY package.json bun.lockb index.ts ./
+WORKDIR /repo
+
+COPY package.json bun.lockb index.ts /repo/
 RUN bun i
-CMD ["bun", "run", "index.ts"]
+CMD ["bun", "run", "/repo/index.ts"]
