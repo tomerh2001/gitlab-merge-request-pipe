@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.2.2...v1.2.3) (2023-10-02)
+
+
+### Bug Fixes
+
+* **docker:** removed workdir from docker since bitbucket pipelines overrides the target dir ([a41b0a8](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/a41b0a8edc1bac496a6edfd484bb95476c8df718))
+
 ## [1.2.2](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.2.1...v1.2.2) (2023-10-02)
 
 
