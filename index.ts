@@ -1,4 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies */
+
 import process from 'node:process';
 import {Gitlab} from '@gitbeaker/rest';
 import git from 'simple-git';
@@ -26,28 +26,38 @@ function getConfig() {
 
 async function getChangelog() {
 	try {
-		// Fetch all the tags.
-		const tags = await simpleGit.tags();
-
-		// If there are less than 2 tags, we can't compare.
-		if (tags.all.length < 2) {
-			logger.error('There are less than two tags. Unable to compare.');
+		const localTags = await simpleGit.tags();
+		if (localTags.all.length === 0) {
+			logger.error('There are no local tags. Unable to compare.');
 			return null;
 		}
 
-		// Get the last two tags.
-		const lastTag = tags.all.at(-1);
-		const previousTag = tags.all.at(-2);
-		logger.info(`Using tags ${previousTag} --> ${lastTag}`);
+		const gitlabTags = await gitlab.Tags.all(config.projectId!);
+		if (gitlabTags.length === 0) {
+			logger.error('There are no tags in GitLab. Unable to compare.');
+			return null;
+		}
 
-		// Get the diff for the CHANGELOG.md file between the last two tags.
-		const changelogDiff = await simpleGit.diff([`${previousTag}..${lastTag}`, '--', 'CHANGELOG.md']);
+		const currentTag = localTags.all.at(-1);
+		const previousTag = gitlabTags.at(0)?.name;
+
+		if (currentTag === previousTag) {
+			logger.info(`Current local tag "${currentTag}" matches the current GitLab tag.`);
+			return null;
+		}
+
+		if (localTags.all.length < 2) {
+			logger.error('There are less than two local tags. Unable to compare further.');
+			return null;
+		}
+
+		logger.info({previousTag, currentTag}, 'Getting CNANGELOG diff between tags');
+		const changelogDiff = await simpleGit.diff([`${previousTag}..${currentTag}`, '--', 'CHANGELOG.md']);
 		const addedLines = changelogDiff.split('\n').filter(line => line.startsWith('+') && !line.startsWith('+++'));
 
-		// Convert the raw added lines to a clean changelog format:
 		return addedLines.map(line => line.slice(1)).join('\n');
 	} catch (error) {
-		logger.error(error, 'Failed to get changes from CHANGELOG.md between the last two tags');
+		logger.error(error, 'Failed to get changes from CHANGELOG.md');
 		return null;
 	}
 }
@@ -74,7 +84,7 @@ if (config.pushSourceBranch) {
 }
 
 if (!config.mergeDescription) {
-	logger.info('No GITLAB_MERGE_DESCRIPTION provided, using CHANGELOG.md');
+	logger.warn('No GITLAB_MERGE_DESCRIPTION provided, using CHANGELOG.md');
 	config.mergeDescription = await getChangelog();
 	logger.info(config.mergeDescription);
 }
@@ -87,7 +97,7 @@ if (config.createMergeRequest) {
 		`Release v${config.version}`,
 		{
 			removeSourceBranch: true,
-			description: config.mergeDescription!,
+			description: config.mergeDescription,
 		},
 	);
 	logger.info(`Merge request created at ${webUrl}`);
