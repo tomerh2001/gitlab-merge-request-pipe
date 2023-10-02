@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.4.0...v1.4.1) (2023-10-02)
+
+
+### Bug Fixes
+
+* :pencil2: fixed a typo ([39e4599](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/39e4599c7a1357c396c6dfba6fafa1e24ab54f1b))
+
 # [1.4.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.3.0...v1.4.0) (2023-10-02)
 
 
