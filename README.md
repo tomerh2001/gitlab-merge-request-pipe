@@ -33,3 +33,5 @@ script:
 | CREATE_MERGE_REQUEST | Create a merge request or not. | 'true' | No |
 | GITLAB_MERGE_DESCRIPTION | Merge request description. | Changelog between last two tags | No |
 | SSL_VERIFY | SSL verification. | 'false' | No |
+| PUSH_TAGS | Push tags or not. | 'true' | No |
+| ADD_CHANGELOG_NOTE_TO_TAG | Add changelog note to the commit of the tag. | 'true' | No |

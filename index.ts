@@ -21,6 +21,8 @@ export function getConfig() {
 		createMergeRequest: process.env.CREATE_MERGE_REQUEST ?? true,
 		mergeDescription: process.env.GITLAB_MERGE_DESCRIPTION ?? null,
 		sslVerify: process.env.SSL_VERIFY ?? false,
+		pushTags: process.env.PUSH_TAGS ?? true,
+		addChangelogNoteToTag: process.env.ADD_CHANGELOG_NOTE_TO_TAG ?? true,
 	};
 }
 
@@ -90,15 +92,43 @@ if (!config.mergeDescription) {
 }
 
 if (config.createMergeRequest) {
-	const {web_url: webUrl} = await gitlab.MergeRequests.create(
-		config.projectId!,
-		config.sourceBranch,
-		config.targetBranch,
-		`Release v${config.version}`,
-		{
-			removeSourceBranch: true,
-			description: config.mergeDescription!,
-		},
-	);
-	logger.info(`Merge request created at ${webUrl}`);
+	try {
+		const {web_url: webUrl} = await gitlab.MergeRequests.create(
+			config.projectId!,
+			config.sourceBranch,
+			config.targetBranch,
+			`Release v${config.version}`,
+			{
+				removeSourceBranch: true,
+				description: config.mergeDescription!,
+			},
+		);
+		logger.info(`Merge request created at ${webUrl}`);
+	} catch (error) {
+		logger.error(error);
+	}
+}
+
+if (config.addChangelogNoteToTag) {
+	try {
+		// eslint-disable-next-line unicorn/no-await-expression-member
+		const latestTag = (await simpleGit.tags()).latest;
+		const commitHash = await simpleGit.raw(['rev-list', '-n', '1', latestTag!]);
+
+		await simpleGit.raw(['notes', 'add', '-m', config.mergeDescription!, commitHash.trim()]);
+		await simpleGit.push('origin', 'refs/notes/*');
+
+		logger.info(`Note added to ${latestTag} and pushed to remote`);
+	} catch (error) {
+		logger.error('Error:', error);
+	}
+}
+
+if (config.pushTags) {
+	try {
+		await simpleGit.pushTags('gitlab');
+		logger.info('Pushed tags to GitLab');
+	} catch (error) {
+		logger.error(error);
+	}
 }
