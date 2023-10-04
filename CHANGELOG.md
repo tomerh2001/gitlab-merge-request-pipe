@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.4.1...v1.5.0) (2023-10-04)
+
+
+### Features
+
+* added PUSH_TAGS and ADD_CHANGELOG_NOTE_TO_TAG ([4781c24](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/4781c24bb3ac6d2e43ffe7cc2ac1f26e7cb5c914))
+
 ## [1.4.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.4.0...v1.4.1) (2023-10-02)
 
 
