@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.5.0...v1.5.1) (2023-10-04)
+
+
+### Bug Fixes
+
+* :zap: changed getChangelog to be based on commits and not tags ([a60cd68](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/a60cd68c9cc2a26edaa240c95f9ab5fedd901e30))
+
 # [1.5.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.4.1...v1.5.0) (2023-10-04)
 
 
