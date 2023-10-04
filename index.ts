@@ -28,33 +28,21 @@ export function getConfig() {
 
 export async function getChangelog() {
 	try {
-		const localTags = await simpleGit.tags();
-		if (localTags.all.length === 0) {
-			logger.error('There are no local tags. Unable to compare.');
+		const config = getConfig();
+		const targetBranch = config.targetBranch;
+
+		const currentHead = await simpleGit.revparse(['HEAD']);
+		const targetBranchDetails = await gitlab.Branches.show(config.projectId!, targetBranch);
+
+		if (!targetBranchDetails) {
+			logger.error(`Unable to fetch details of branch ${targetBranch} from GitLab.`);
 			return null;
 		}
 
-		const gitlabTags = await gitlab.Tags.all(config.projectId!);
-		if (gitlabTags.length === 0) {
-			logger.error('There are no tags in GitLab. Unable to compare.');
-			return null;
-		}
+		const targetBranchHead = targetBranchDetails.commit.id;
 
-		const currentTag = localTags.all.at(-1);
-		const previousTag = gitlabTags.at(0)?.name;
-
-		if (currentTag === previousTag) {
-			logger.info(`Current local tag "${currentTag}" matches the current GitLab tag.`);
-			return null;
-		}
-
-		if (localTags.all.length < 2) {
-			logger.error('There are less than two local tags. Unable to compare further.');
-			return null;
-		}
-
-		logger.info({previousTag, currentTag}, 'Getting CHANGELOG diff between tags');
-		const changelogDiff = await simpleGit.diff([`${previousTag}..${currentTag}`, '--', 'CHANGELOG.md']);
+		logger.info({previousHead: targetBranchHead, currentHead}, 'Getting CHANGELOG diff between commits');
+		const changelogDiff = await simpleGit.diff([`${targetBranchHead}..${currentHead}`, '--', 'CHANGELOG.md']);
 		const addedLines = changelogDiff.split('\n').filter(line => line.startsWith('+') && !line.startsWith('+++'));
 
 		return addedLines.map(line => line.slice(1)).join('\n');
@@ -110,18 +98,14 @@ if (config.createMergeRequest) {
 }
 
 if (config.addChangelogNoteToTag) {
-	try {
-		// eslint-disable-next-line unicorn/no-await-expression-member
-		const latestTag = (await simpleGit.tags()).latest;
-		const commitHash = await simpleGit.raw(['rev-list', '-n', '1', latestTag!]);
+	// eslint-disable-next-line unicorn/no-await-expression-member
+	const latestTag = (await simpleGit.tags()).latest;
+	const commitHash = await simpleGit.raw(['rev-list', '-n', '1', latestTag!]);
 
-		await simpleGit.raw(['notes', 'add', '-m', config.mergeDescription!, commitHash.trim()]);
-		await simpleGit.push('origin', 'refs/notes/*');
+	await simpleGit.raw(['notes', 'add', '-f', '-m', config.mergeDescription!, commitHash.trim()]);
+	await simpleGit.push('origin', 'refs/notes/*');
 
-		logger.info(`Note added to ${latestTag} and pushed to remote`);
-	} catch (error) {
-		logger.error('Error:', error);
-	}
+	logger.info(`Note added to ${latestTag} and pushed to remote`);
 }
 
 if (config.pushTags) {
