@@ -1,3 +1,10 @@
+## [1.5.4](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.5.3...v1.5.4) (2023-10-05)
+
+
+### Bug Fixes
+
+* Updated index.ts ([691986e](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/691986e6395a0d9ee7fbb74a27d93a846e07efea))
+
 ## [1.5.3](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.5.2...v1.5.3) (2023-10-05)
 
 
