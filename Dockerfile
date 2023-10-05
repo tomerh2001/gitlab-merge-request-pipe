@@ -4,6 +4,8 @@ ARG GH_REPO
 ARG RELEASE_NOTES
 
 LABEL org.opencontainers.image.source $GH_REPO
+
+VOLUME /repo
 WORKDIR /repo
 
 COPY package.json bun.lockb index.ts /repo/
