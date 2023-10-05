@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import process from 'node:process';
+import {join} from 'node:path';
 import {Gitlab} from '@gitbeaker/rest';
 import git from 'simple-git';
 import pino from 'pino';
@@ -12,7 +13,7 @@ import {program} from 'commander';
 const logger = pino(PinoPretty({ignore: 'pid,hostname'}));
 
 async function getConfig(path: string) {
-	const packageJson = await Bun.file(path + '/package.json').json();
+	const packageJson = await Bun.file(join(path, 'package.json')).json();
 
 	return {
 		version: process.env.VERSION ?? packageJson.version,
@@ -32,7 +33,7 @@ async function getConfig(path: string) {
 
 async function getChangelog(path: string) {
 	try {
-		const config = getConfig(path);
+		const config = await getConfig(path);
 		const targetBranch = config.targetBranch;
 		const simpleGit = git(path).env({GIT_SSL_NO_VERIFY: config.sslVerify.toString()});
 
@@ -67,8 +68,14 @@ async function main(path: string) {
 	const simpleGit = git(path).env({GIT_SSL_NO_VERIFY: config.sslVerify.toString()});
 
 	const project = await gitlab.Projects.show(config.projectId);
-	const repoUrl = `${config.gitlabUrl}/${project.path_with_namespace}.git`.replace('https://', `https://gitlab-ci-token:${config.gitlabToken}@`);
-	logger.info({repoUrl}, 'Constructed repo URL');
+
+	let repoUrl = `${config.gitlabUrl}${project.path_with_namespace}.git`;
+	logger.info({repoUrl}, 'Constructing repo URL');
+
+	if (config.gitlabToken) {
+		repoUrl = repoUrl.replace('https://', `https://gitlab-ci-token:${config.gitlabToken}@`);
+		logger.info({repoUrl}, 'Constructed repo URL');
+	}
 
 	const remotes = await simpleGit.getRemotes(true);
 	if (!remotes.some(remote => remote.name === 'gitlab')) {
@@ -125,5 +132,5 @@ async function main(path: string) {
 	}
 }
 
-program.argument('<path>', 'Path to the repository to release').action(main);
+program.argument('<path>', 'Path of the repository to release').action(main);
 program.parse(process.argv);

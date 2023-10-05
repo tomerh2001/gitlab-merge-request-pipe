@@ -1,0 +1,11 @@
+services:
+  gitlab-merge-request-pipe:
+    image: tomerh2001/gitlab-merge-request-pipe:latest
+    build:
+      dockerfile: Dockerfile
+    env_file: .env
+    working_dir: ${TARGET_DIR}
+    volumes:
+      - ${TARGET_DIR}:${TARGET_DIR}
+    environment:
+      BITBUCKET_CLONE_DIR: ${TARGET_DIR}

@@ -1,10 +1,14 @@
-FROM oven/bun:alpine
+FROM oven/bun:1-alpine
 
+ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 ARG GH_REPO
 
 LABEL org.opencontainers.image.source $GH_REPO
-WORKDIR /app 
+WORKDIR /repo
 
-COPY package.json bun.lockb index.ts /app/ 
-RUN bun i
-CMD bun run --cwd $BITBUCKET_CLONE_DIR /app/index.ts
+COPY package.json bun.lockb index.ts ./
+RUN apk add --no-cache git && \
+    bun install
+
+COPY pipe.sh ./
+CMD ["sh", "/repo/pipe.sh"]
