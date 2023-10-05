@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.6.0...v1.7.0) (2023-10-05)
+
+
+### Features
+
+* :zap: replaced git notes with bitbucket shared folder ([82a7f45](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/82a7f455bce8b8b25351ebe8eaecb63662655e7d))
+
 # [1.6.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.5.4...v1.6.0) (2023-10-05)
 
 
