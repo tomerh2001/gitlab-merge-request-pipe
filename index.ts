@@ -26,8 +26,7 @@ async function getConfig(path: string) {
 		createMergeRequest: process.env.CREATE_MERGE_REQUEST ?? true,
 		mergeDescription: process.env.GITLAB_MERGE_DESCRIPTION ?? null,
 		sslVerify: process.env.SSL_VERIFY ?? false,
-		pushTags: process.env.PUSH_TAGS ?? true,
-		addChangelogNoteToTag: process.env.ADD_CHANGELOG_NOTE_TO_TAG ?? true,
+		changelogOutputPath: process.env.CHANGELOG_OUTPUT_PATH ?? process.env.BITBUCKET_PIPE_SHARED_STORAGE_DIR ?? null,
 	};
 }
 
@@ -69,7 +68,7 @@ async function main(path: string) {
 
 	const project = await gitlab.Projects.show(config.projectId);
 
-	let repoUrl = `${config.gitlabUrl}${project.path_with_namespace}.git`;
+	let repoUrl = `${config.gitlabUrl}/${project.path_with_namespace}.git`;
 	logger.info({repoUrl}, 'Constructing repo URL');
 
 	if (config.gitlabToken) {
@@ -97,7 +96,7 @@ async function main(path: string) {
 	if (config.createMergeRequest) {
 		try {
 			const {web_url: webUrl} = await gitlab.MergeRequests.create(
-				config.projectId,
+				config.projectId!,
 				config.sourceBranch,
 				config.targetBranch,
 				`Release v${config.version}`,
@@ -112,23 +111,10 @@ async function main(path: string) {
 		}
 	}
 
-	if (config.addChangelogNoteToTag) {
-		const latestTag = (await simpleGit.tags()).latest!;
-		const commitHash = await simpleGit.raw(['rev-list', '-n', '1', latestTag]);
-
-		await simpleGit.raw(['notes', 'add', '-f', '-m', config.mergeDescription, commitHash.trim()]);
-		await simpleGit.push('origin', 'refs/notes/*');
-
-		logger.info(`Note added to ${latestTag} and pushed to remote`);
-	}
-
-	if (config.pushTags) {
-		try {
-			await simpleGit.pushTags('gitlab');
-			logger.info('Pushed tags to GitLab');
-		} catch (error) {
-			logger.error(error);
-		}
+	if (config.changelogOutputPath) {
+		const outputPath = join(config.changelogOutputPath, 'CHANGELOG_DIFF.md');
+		await Bun.write(outputPath, config.mergeDescription!);
+		logger.info(`Wrote CHANGELOG.md to ${outputPath}`);
 	}
 }
 

@@ -9,3 +9,4 @@ services:
       - ${TARGET_DIR}:${TARGET_DIR}
     environment:
       BITBUCKET_CLONE_DIR: ${TARGET_DIR}
+      # BITBUCKET_PIPE_SHARED_STORAGE_DIR: ${TARGET_DIR}
