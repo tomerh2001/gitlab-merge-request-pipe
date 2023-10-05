@@ -1,3 +1,16 @@
+# [1.6.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.5.4...v1.6.0) (2023-10-05)
+
+
+### Bug Fixes
+
+* **docker:** :chart_with_upwards_trend: improved dockerfile and added compose ([4162530](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/416253042605fae2326afcade73b12cd0da20a99))
+
+
+### Features
+
+* updated package.json and deps with commander ([aec49bd](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/aec49bdd779fd00fa5eedc5aa96c612677bf2f73))
+* using commander ([d49c841](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/d49c841518816489dd76706529aa2e8ae68a8f32))
+
 ## [1.5.4](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.5.3...v1.5.4) (2023-10-05)
 
 
