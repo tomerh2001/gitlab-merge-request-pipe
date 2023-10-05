@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.5.1...v1.5.2) (2023-10-05)
+
+
+### Bug Fixes
+
+* Update Dockerfile ([e0dd7ac](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/e0dd7ac8063ea55e81cf301d1af7622831d56639))
+
 ## [1.5.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.5.0...v1.5.1) (2023-10-04)
 
 
