@@ -1,3 +1,10 @@
+## [1.5.3](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.5.2...v1.5.3) (2023-10-05)
+
+
+### Bug Fixes
+
+* Updated dockerfile to use bitbucket clone dir as the cwd ([1941457](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/19414579b9ac1f2892aefa69e6bf281a57ec9ecf))
+
 ## [1.5.2](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.5.1...v1.5.2) (2023-10-05)
 
 
