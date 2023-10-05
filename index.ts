@@ -1,19 +1,19 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable new-cap */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import process from 'node:process';
 import {Gitlab} from '@gitbeaker/rest';
 import git from 'simple-git';
 import pino from 'pino';
 import PinoPretty from 'pino-pretty';
+import {program} from 'commander';
 
-// eslint-disable-next-line new-cap
 const logger = pino(PinoPretty({ignore: 'pid,hostname'}));
 
-logger.info(process.env)
-logger.info(process.cwd())
-const packageJson = await Bun.file(process.env.BITBUCKET_CLONE_DIR + '/package.json').json()
-logger.info(packageJson)
+async function getConfig(path: string) {
+	const packageJson = await Bun.file(path + '/package.json').json();
 
-export function getConfig() {
 	return {
 		version: process.env.VERSION ?? packageJson.version,
 		gitlabUrl: process.env.GITLAB_URL ?? 'https://gitlab.com',
@@ -30,13 +30,15 @@ export function getConfig() {
 	};
 }
 
-export async function getChangelog() {
+async function getChangelog(path: string) {
 	try {
-		const config = getConfig();
+		const config = getConfig(path);
 		const targetBranch = config.targetBranch;
+		const simpleGit = git(path).env({GIT_SSL_NO_VERIFY: config.sslVerify.toString()});
 
 		const currentHead = await simpleGit.revparse(['HEAD']);
-		const targetBranchDetails = await gitlab.Branches.show(config.projectId!, targetBranch);
+		const gitlab = new Gitlab({host: config.gitlabUrl, token: config.gitlabToken});
+		const targetBranchDetails = await gitlab.Branches.show(config.projectId, targetBranch);
 
 		if (!targetBranchDetails) {
 			logger.error(`Unable to fetch details of branch ${targetBranch} from GitLab.`);
@@ -56,67 +58,72 @@ export async function getChangelog() {
 	}
 }
 
-const config = getConfig();
-logger.info(config, 'Started');
+async function main(path: string) {
+	logger.info({path});
+	const config = await getConfig(path);
+	logger.info(config, 'Configuration');
 
-const gitlab = new Gitlab({host: config.gitlabUrl, token: config.gitlabToken!});
-const simpleGit = git({config: [`http.sslVerify=${config.sslVerify}`]});
+	const gitlab = new Gitlab({host: config.gitlabUrl, token: config.gitlabToken});
+	const simpleGit = git(path).env({GIT_SSL_NO_VERIFY: config.sslVerify.toString()});
 
-const project = await gitlab.Projects.show(config.projectId!);
-const repoUrl = `${config.gitlabUrl}/${project.path_with_namespace}.git`.replace('https://', `https://gitlab-ci-token:${config.gitlabToken}@`);
-logger.info({repoUrl}, 'Constructed repo URL:');
+	const project = await gitlab.Projects.show(config.projectId);
+	const repoUrl = `${config.gitlabUrl}/${project.path_with_namespace}.git`.replace('https://', `https://gitlab-ci-token:${config.gitlabToken}@`);
+	logger.info({repoUrl}, 'Constructed repo URL');
 
-const remotes = await simpleGit.getRemotes(true);
-if (!remotes.some(remote => remote.name === 'gitlab')) {
-	await simpleGit.addRemote('gitlab', repoUrl);
-	logger.info('Added git remote "gitlab"');
-}
+	const remotes = await simpleGit.getRemotes(true);
+	if (!remotes.some(remote => remote.name === 'gitlab')) {
+		await simpleGit.addRemote('gitlab', repoUrl);
+		logger.info('Added git remote "gitlab"');
+	}
 
-if (config.pushSourceBranch) {
-	await simpleGit.push(['-f', 'gitlab', `HEAD:${config.sourceBranch}`]);
-	logger.info(`Pushed the current state as "${config.sourceBranch}" to ${repoUrl}`);
-}
+	if (config.pushSourceBranch) {
+		await simpleGit.push(['-f', 'gitlab', `HEAD:${config.sourceBranch}`]);
+		logger.info(`Pushed the current state as "${config.sourceBranch}" to ${repoUrl}`);
+	}
 
-if (!config.mergeDescription) {
-	logger.warn('No GITLAB_MERGE_DESCRIPTION provided, using CHANGELOG.md');
-	config.mergeDescription = await getChangelog();
-	logger.info(config.mergeDescription);
-}
+	if (!config.mergeDescription) {
+		logger.warn('No GITLAB_MERGE_DESCRIPTION provided, using CHANGELOG.md');
+		config.mergeDescription = await getChangelog(path);
+		logger.info(config.mergeDescription);
+	}
 
-if (config.createMergeRequest) {
-	try {
-		const {web_url: webUrl} = await gitlab.MergeRequests.create(
-			config.projectId!,
-			config.sourceBranch,
-			config.targetBranch,
-			`Release v${config.version}`,
-			{
-				removeSourceBranch: true,
-				description: config.mergeDescription!,
-			},
-		);
-		logger.info(`Merge request created at ${webUrl}`);
-	} catch (error) {
-		logger.error(error);
+	if (config.createMergeRequest) {
+		try {
+			const {web_url: webUrl} = await gitlab.MergeRequests.create(
+				config.projectId,
+				config.sourceBranch,
+				config.targetBranch,
+				`Release v${config.version}`,
+				{
+					removeSourceBranch: true,
+					description: config.mergeDescription,
+				},
+			);
+			logger.info(`Merge request created at ${webUrl}`);
+		} catch (error) {
+			logger.error(error);
+		}
+	}
+
+	if (config.addChangelogNoteToTag) {
+		const latestTag = (await simpleGit.tags()).latest!;
+		const commitHash = await simpleGit.raw(['rev-list', '-n', '1', latestTag]);
+
+		await simpleGit.raw(['notes', 'add', '-f', '-m', config.mergeDescription, commitHash.trim()]);
+		await simpleGit.push('origin', 'refs/notes/*');
+
+		logger.info(`Note added to ${latestTag} and pushed to remote`);
+	}
+
+	if (config.pushTags) {
+		try {
+			await simpleGit.pushTags('gitlab');
+			logger.info('Pushed tags to GitLab');
+		} catch (error) {
+			logger.error(error);
+		}
 	}
 }
 
-if (config.addChangelogNoteToTag) {
-	// eslint-disable-next-line unicorn/no-await-expression-member
-	const latestTag = (await simpleGit.tags()).latest;
-	const commitHash = await simpleGit.raw(['rev-list', '-n', '1', latestTag!]);
-
-	await simpleGit.raw(['notes', 'add', '-f', '-m', config.mergeDescription!, commitHash.trim()]);
-	await simpleGit.push('origin', 'refs/notes/*');
-
-	logger.info(`Note added to ${latestTag} and pushed to remote`);
-}
-
-if (config.pushTags) {
-	try {
-		await simpleGit.pushTags('gitlab');
-		logger.info('Pushed tags to GitLab');
-	} catch (error) {
-		logger.error(error);
-	}
-}
+program.argument('<path>', 'Path to the repository to release').action(main);
+program.parse(process.argv);
