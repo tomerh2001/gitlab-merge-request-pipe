@@ -4,10 +4,14 @@ import {Gitlab} from '@gitbeaker/rest';
 import git from 'simple-git';
 import pino from 'pino';
 import PinoPretty from 'pino-pretty';
-import packageJson from './package.json';
 
 // eslint-disable-next-line new-cap
 const logger = pino(PinoPretty({ignore: 'pid,hostname'}));
+
+logger.info(process.env)
+logger.info(process.cwd())
+const packageJson = await Bun.file(process.env.BITBUCKET_CLONE_DIR + '/package.json').json()
+logger.info(packageJson)
 
 export function getConfig() {
 	return {
