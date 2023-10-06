@@ -1,3 +1,10 @@
+## [1.9.7](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.6...v1.9.7) (2023-10-06)
+
+
+### Bug Fixes
+
+* added git safe dirs ([82bd718](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/82bd7184a2759af93ac2a4fa6ee14e45111d6a5f))
+
 ## [1.9.6](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.5...v1.9.6) (2023-10-06)
 
 
