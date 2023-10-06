@@ -1,3 +1,10 @@
+## [1.9.4](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.3...v1.9.4) (2023-10-06)
+
+
+### Bug Fixes
+
+* updated pipe.sh ([7cdac6c](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/7cdac6cc2bc4fdc951b5d18890c4036281e5a5ef))
+
 ## [1.9.3](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.2...v1.9.3) (2023-10-06)
 
 
