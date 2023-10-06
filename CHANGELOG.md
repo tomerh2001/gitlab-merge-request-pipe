@@ -1,3 +1,10 @@
+## [1.9.14](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.13...v1.9.14) (2023-10-06)
+
+
+### Bug Fixes
+
+* removed debugging ([3056e44](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/3056e447bc5f14ea4dce2ed4f434d960b73113df))
+
 ## [1.9.13](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.12...v1.9.13) (2023-10-06)
 
 
