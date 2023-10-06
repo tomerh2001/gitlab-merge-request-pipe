@@ -63,7 +63,7 @@ async function main(path: string) {
 	}).env({
 		GIT_SSL_NO_VERIFY: config.sslVerify.toString(),
 	});
-	await simpleGit.addConfig('safe.directory', path);
+	await simpleGit.addConfig('safe.directory', '*', false, 'global');
 	logger.info({path}, 'Set git config "safe.directory" to the repository path');
 
 	const project = await gitlab.Projects.show(config.projectId);
