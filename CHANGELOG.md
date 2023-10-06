@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.8.0...v1.8.1) (2023-10-06)
+
+
+### Bug Fixes
+
+* applied this official bitbucket fix: https://confluence.atlassian.com/bbkb/unable-to-read-or-use-the-ssh-key-inside-the-custom-pipe-1155473263.html ([6ad0fcb](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/6ad0fcba14cb0243879289ed589b353cc28de256))
+
 # [1.8.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.7.0...v1.8.0) (2023-10-06)
 
 
