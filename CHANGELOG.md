@@ -1,3 +1,10 @@
+## [1.9.10](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.9...v1.9.10) (2023-10-06)
+
+
+### Bug Fixes
+
+* added safe.directory to simplegit config ([f52a04c](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/f52a04ca32905eb3ba33069282cffad6a42693a8))
+
 ## [1.9.9](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.8...v1.9.9) (2023-10-06)
 
 
