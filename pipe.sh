@@ -2,10 +2,6 @@
 
 set -e
 
-git config --global --add safe.directory /repo
-git config --global --add safe.directory /opt/atlassian/pipelines/agent/build
-git config --global --add safe.directory ${PWD}
-
 if [ -n "$SSH_TUNNEL_URL" ]; then
     echo "Creating SSH tunnel to $SSH_TUNNEL_URL"
 
@@ -45,5 +41,8 @@ if [ -n "$SSH_TUNNEL_URL" ]; then
     echo "SSH tunnel created. New GITLAB_URL is $GITLAB_URL"
 fi
 
+git config --global --add safe.directory /repo
+git config --global --add safe.directory /opt/atlassian/pipelines/agent/build
+git config --global --add safe.directory ${PWD}
 
 bun run /repo/index.ts $BITBUCKET_CLONE_DIR
