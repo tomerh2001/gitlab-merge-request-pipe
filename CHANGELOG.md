@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.0...v1.9.1) (2023-10-06)
+
+
+### Bug Fixes
+
+* added node shebang ([f17061a](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/f17061a0a76917f35ea031537011473a31dc3321))
+
 # [1.9.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.8.2...v1.9.0) (2023-10-06)
 
 
