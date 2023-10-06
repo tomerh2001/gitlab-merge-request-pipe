@@ -1,3 +1,10 @@
+## [1.9.9](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.8...v1.9.9) (2023-10-06)
+
+
+### Bug Fixes
+
+* added echos ([2e920e2](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/2e920e2f39f5d1ba01844b275cd0e23de8a58043))
+
 ## [1.9.8](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.7...v1.9.8) (2023-10-06)
 
 
