@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.8.1...v1.8.2) (2023-10-06)
+
+
+### Bug Fixes
+
+* changed order of operations for accessing ssh folder ([9cd2be3](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/9cd2be3a103f13853c8b39e69ae391c83d8d2c08))
+
 ## [1.8.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.8.0...v1.8.1) (2023-10-06)
 
 
