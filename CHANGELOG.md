@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.8.2...v1.9.0) (2023-10-06)
+
+
+### Features
+
+* **package.json:** :building_construction: added bin to package.json to support npx (bunx) ([4b99175](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/4b99175e6e9aaaf2d5137fe2b43698169baab028))
+
 ## [1.8.2](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.8.1...v1.8.2) (2023-10-06)
 
 
