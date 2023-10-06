@@ -2,6 +2,9 @@
   "name": "gitlab-merge-request-pipe",
   "module": "index.ts",
   "type": "module",
+  "bin": {
+    "gitlab-merge-request-pipe": "./index.ts"
+  },
   "devDependencies": {
     "@codedependant/semantic-release-docker": "^4.4.0",
     "@semantic-release/changelog": "^6.0.3",
