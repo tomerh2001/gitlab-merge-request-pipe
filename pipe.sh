@@ -21,6 +21,7 @@ if [ -n "$SSH_TUNNEL_URL" ]; then
     SSH_server=${SSH_TUNNEL_URL#*@}
 
     # Copy SSH keys from bitbucket pipeline to the agent
+    mkdir -p ~/.ssh
     if [ -d "/opt/atlassian/pipelines/agent/ssh/" ]; then
         echo "Copying SSH keys from bitbucket pipeline to the agent"
         cp /opt/atlassian/pipelines/agent/ssh/id_rsa_tmp ~/.ssh/id_rsa
@@ -29,7 +30,6 @@ if [ -n "$SSH_TUNNEL_URL" ]; then
     fi
 
     # Set up the SSH tunnel
-    mkdir -p ~/.ssh
     ssh-keyscan -H $SSH_server >> ~/.ssh/known_hosts
     ssh -N -L $remote_port:$remote_ip:$remote_port $user@$SSH_server &
     sleep 5 # Wait for tunnel to be established
