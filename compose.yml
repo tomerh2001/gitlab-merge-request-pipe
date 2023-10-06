@@ -7,6 +7,8 @@ services:
     working_dir: ${TARGET_DIR}
     volumes:
       - ${TARGET_DIR}:${TARGET_DIR}
+      - ${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK}
     environment:
+      SSH_AUTH_SOCK: ${SSH_AUTH_SOCK}
       BITBUCKET_CLONE_DIR: ${TARGET_DIR}
       # BITBUCKET_PIPE_SHARED_STORAGE_DIR: ${TARGET_DIR}

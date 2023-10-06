@@ -7,7 +7,7 @@ LABEL org.opencontainers.image.source $GH_REPO
 WORKDIR /repo
 
 COPY package.json bun.lockb index.ts ./
-RUN apk add --no-cache git && \
+RUN apk add --no-cache git openssh-client && \
     bun install
 
 COPY pipe.sh ./
