@@ -2,9 +2,6 @@
 
 set -e
 
-# Given environment variables
-GITLAB_URL=https://194.90.203.223:4430/
-
 if [ -n "$SSH_TUNNEL_URL" ]; then
     echo "Creating SSH tunnel to $SSH_TUNNEL_URL"
 
