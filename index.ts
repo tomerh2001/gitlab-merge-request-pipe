@@ -14,6 +14,11 @@ import {program} from 'commander';
 
 const logger = pino(PinoPretty({ignore: 'pid,hostname'}));
 
+/**
+ * Retrieves the configuration options for the GitLab merge request pipeline.
+ * @param path - The path to the package.json file.
+ * @returns An object containing the configuration options.
+ */
 async function getConfig(path: string) {
 	const packageJson = await Bun.file(join(path, 'package.json')).json();
 
@@ -32,6 +37,11 @@ async function getConfig(path: string) {
 	};
 }
 
+/**
+ * Retrieves the changelog diff between the current HEAD and the target branch HEAD.
+ * @param path - The path to the Git repository.
+ * @returns A Promise that resolves to the changelog diff as a string, or null if an error occurs.
+ */
 async function getChangelog(path: string) {
 	try {
 		const config = await getConfig(path);
@@ -60,6 +70,11 @@ async function getChangelog(path: string) {
 	}
 }
 
+/**
+ * Main function that performs the GitLab merge request pipeline.
+ * @param path - The path to the Git repository.
+ * @returns A Promise that resolves when the pipeline is complete.
+ */
 async function main(path: string) {
 	logger.info({path});
 	const config = await getConfig(path);
