@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.7.0...v1.8.0) (2023-10-06)
+
+
+### Features
+
+* **docker:** :closed_lock_with_key: added ssh-tunnel support ([06bf763](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/06bf763272097095f625f3e6b12452cce0b8e102))
+
 # [1.7.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.6.0...v1.7.0) (2023-10-05)
 
 
