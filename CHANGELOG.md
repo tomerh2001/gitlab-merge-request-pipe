@@ -1,3 +1,10 @@
+## [1.9.5](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.4...v1.9.5) (2023-10-06)
+
+
+### Bug Fixes
+
+* fixed a bug with mergeDescription ([dfd5341](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/dfd5341f4275bcf49e95e56922a9107ca443a07d))
+
 ## [1.9.4](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.3...v1.9.4) (2023-10-06)
 
 
