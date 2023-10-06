@@ -2,6 +2,10 @@
 
 set -e
 
+git config --global --add safe.directory /repo
+git config --global --add safe.directory /opt/atlassian/pipelines/agent/build
+git config --global --add safe.directory ${PWD}
+
 if [ -n "$SSH_TUNNEL_URL" ]; then
     echo "Creating SSH tunnel to $SSH_TUNNEL_URL"
 
