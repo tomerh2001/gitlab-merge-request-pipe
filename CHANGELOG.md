@@ -1,3 +1,10 @@
+## [1.9.3](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.2...v1.9.3) (2023-10-06)
+
+
+### Bug Fixes
+
+* removed ssh tunnel from index (it's only used in pipe.sh) ([294713c](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/294713cb90283f37c0670ece5913926065bdd3c6))
+
 ## [1.9.2](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.1...v1.9.2) (2023-10-06)
 
 
