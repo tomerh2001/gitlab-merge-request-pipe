@@ -1,3 +1,10 @@
+## [1.9.8](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.7...v1.9.8) (2023-10-06)
+
+
+### Bug Fixes
+
+* moved git config to after ([a926302](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/a9263024ca762238c94ec92d3e9a46379e4d3b46))
+
 ## [1.9.7](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.6...v1.9.7) (2023-10-06)
 
 
