@@ -1,3 +1,11 @@
+## [1.9.6](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.5...v1.9.6) (2023-10-06)
+
+
+### Bug Fixes
+
+* updated getconfig ([41ff700](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/41ff700ab22568bd390bd1ec04347ce3b3ef2df4))
+* updated ssl_verify in commander ([e260a9b](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/e260a9bbc0cd0155a200330ae205114ab4020331))
+
 ## [1.9.5](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.4...v1.9.5) (2023-10-06)
 
 
