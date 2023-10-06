@@ -1,3 +1,10 @@
+## [1.9.11](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.10...v1.9.11) (2023-10-06)
+
+
+### Bug Fixes
+
+* changed safe dir ([bc868c1](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/bc868c1049a794b323d035b0fb399380b2478f5f))
+
 ## [1.9.10](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.9...v1.9.10) (2023-10-06)
 
 
