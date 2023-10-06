@@ -1,3 +1,10 @@
+## [1.9.13](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.12...v1.9.13) (2023-10-06)
+
+
+### Bug Fixes
+
+* added fetch all and debugging ([495fda7](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/495fda775a4c4726c6a16d4c4398c79b650dde27))
+
 ## [1.9.12](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.11...v1.9.12) (2023-10-06)
 
 
