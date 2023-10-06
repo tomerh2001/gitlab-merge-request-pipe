@@ -58,7 +58,13 @@ async function main(path: string) {
 	logger.info(config, 'Configuration');
 
 	const gitlab = new Gitlab({host: config.gitlabUrl, token: config.gitlabToken});
-	const simpleGit = git(path).env({GIT_SSL_NO_VERIFY: config.sslVerify.toString()});
+	const simpleGit = git({
+		baseDir: path,
+	}).env({
+		GIT_SSL_NO_VERIFY: config.sslVerify.toString(),
+	});
+	await simpleGit.addConfig('safe.directory', path);
+	logger.info({path}, 'Set git config "safe.directory" to the repository path');
 
 	const project = await gitlab.Projects.show(config.projectId);
 
