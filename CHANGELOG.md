@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.1...v1.9.2) (2023-10-06)
+
+
+### Bug Fixes
+
+* updated commander flags ([35f2c13](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/35f2c137632a4758241bf4d795ac0143147aec83))
+
 ## [1.9.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.0...v1.9.1) (2023-10-06)
 
 
