@@ -1,3 +1,10 @@
+## [1.9.15](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.14...v1.9.15) (2023-10-06)
+
+
+### Bug Fixes
+
+* updated changelogoutputpath default ([d9018f8](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/d9018f80e3d830d845a72671887de49aa0b9306b))
+
 ## [1.9.14](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.13...v1.9.14) (2023-10-06)
 
 
