@@ -121,18 +121,9 @@ async function getConfig(path: string) {
 	const packageJson = await Bun.file(join(path, 'package.json')).json();
 
 	return {
-		gitlabToken: options.gitlabToken,
-		projectId: options.projectId,
-		gitlabUrl: options.gitlabUrl,
+		...options,
 		version: options.version ?? packageJson.version,
 		sourceBranch: options.sourceBranch ?? 'release/v' + (options.version ?? packageJson.version),
-		targetBranch: options.targetBranch,
-		pushSourceBranch: options.pushSourceBranch === 'true',
-		createMergeRequest: options.createMergeRequest === 'true',
-		mergeDescription: options.mergeDescription,
-		sslVerify: options.sslVerify === 'true',
-		changelogOutputPath: options.changelogOutputPath,
-		sshTunnelUrl: options.sshTunnelUrl,
 	};
 }
 
@@ -145,8 +136,8 @@ program
 	.option('-v, --version <version>', 'Release version')
 	.option('-s, --sourceBranch <branch>', 'Source branch for merge request')
 	.option('--targetBranch <branch>', 'Target branch for merge request', process.env.GITLAB_TARGET_BRANCH ?? 'main')
-	.option('--pushSourceBranch [boolean]', 'Push source branch or not', process.env.PUSH_SOURCE_BRANCH ?? 'true')
-	.option('--createMergeRequest [boolean]', 'Create a merge request or not', process.env.CREATE_MERGE_REQUEST ?? 'true')
+	.option('--pushSourceBranch [boolean]', 'Push source branch or not', process.env.PUSH_SOURCE_BRANCH ?? true)
+	.option('--createMergeRequest [boolean]', 'Create a merge request or not', process.env.CREATE_MERGE_REQUEST ?? true)
 	.option('--mergeDescription <description>', 'Merge request description', process.env.GITLAB_MERGE_DESCRIPTION ?? undefined)
 	.option('--sslVerify [boolean]', 'SSL verification', process.env.SSL_VERIFY ?? 'false')
 	.option('--changelogOutputPath <path>', 'Path to output the CHANGELOG diff file', process.env.CHANGELOG_OUTPUT_PATH ?? undefined)
