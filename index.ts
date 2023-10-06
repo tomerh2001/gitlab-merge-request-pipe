@@ -23,7 +23,11 @@ async function getChangelog(path: string) {
 	try {
 		const config = await getConfig(path);
 		const targetBranch = config.targetBranch;
-		const simpleGit = git(path).env({GIT_SSL_NO_VERIFY: config.sslVerify.toString()});
+		const simpleGit = git(path).env({GIT_SSL_NO_VERIFY: config.sslVerify.toString()}).outputHandler((command, stdout, stderr) => {
+			stdout.pipe(process.stdout);
+			stderr.pipe(process.stderr);
+		});
+		await simpleGit.fetch(['--all']);
 
 		const currentHead = await simpleGit.revparse(['HEAD']);
 		const gitlab = new Gitlab({host: config.gitlabUrl, token: config.gitlabToken});
