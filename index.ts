@@ -150,7 +150,6 @@ program
 	.option('--mergeDescription <description>', 'Merge request description', process.env.GITLAB_MERGE_DESCRIPTION ?? 'Changelog between last two tags')
 	.option('--sslVerify [boolean]', 'SSL verification', process.env.SSL_VERIFY ?? 'false')
 	.option('--changelogOutputPath <path>', 'Path to output the CHANGELOG diff file', process.env.CHANGELOG_OUTPUT_PATH ?? undefined)
-	.option('--sshTunnelUrl <url>', 'SSH endpoint for creating an SSH tunnel to your GitLab', process.env.SSH_TUNNEL_URL ?? undefined)
 	.action(main);
 
 program.parse(process.argv);
