@@ -41,8 +41,8 @@ if [ -n "$SSH_TUNNEL_URL" ]; then
     echo "SSH tunnel created. New GITLAB_URL is $GITLAB_URL"
 fi
 
-git config --global --add safe.directory /repo
-git config --global --add safe.directory /opt/atlassian/pipelines/agent/build
-git config --global --add safe.directory ${PWD}
+echo "Turning off git safe.directory setting"
+git config --global --add safe.directory '*'
+echo "Running bun run /repo/index.ts $BITBUCKET_CLONE_DIR"
 
 bun run /repo/index.ts $BITBUCKET_CLONE_DIR
