@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable new-cap */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
