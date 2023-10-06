@@ -139,7 +139,7 @@ program
 	.option('--pushSourceBranch [boolean]', 'Push source branch or not', process.env.PUSH_SOURCE_BRANCH ?? true)
 	.option('--createMergeRequest [boolean]', 'Create a merge request or not', process.env.CREATE_MERGE_REQUEST ?? true)
 	.option('--mergeDescription <description>', 'Merge request description', process.env.GITLAB_MERGE_DESCRIPTION ?? undefined)
-	.option('--sslVerify [boolean]', 'SSL verification', process.env.SSL_VERIFY ?? 'false')
+	.option('--sslVerify [boolean]', 'SSL verification', process.env.SSL_VERIFY ?? false)
 	.option('--changelogOutputPath <path>', 'Path to output the CHANGELOG diff file', process.env.CHANGELOG_OUTPUT_PATH ?? undefined)
 	.action(main);
 
