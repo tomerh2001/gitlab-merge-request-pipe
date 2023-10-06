@@ -15,29 +15,6 @@ import {program} from 'commander';
 const logger = pino(PinoPretty({ignore: 'pid,hostname'}));
 
 /**
- * Retrieves the configuration options for the GitLab merge request pipeline.
- * @param path - The path to the package.json file.
- * @returns An object containing the configuration options.
- */
-async function getConfig(path: string) {
-	const packageJson = await Bun.file(join(path, 'package.json')).json();
-
-	return {
-		version: process.env.VERSION ?? packageJson.version,
-		gitlabUrl: process.env.GITLAB_URL ?? 'https://gitlab.com',
-		gitlabToken: process.env.GITLAB_TOKEN,
-		projectId: process.env.GITLAB_PROJECT_ID,
-		sourceBranch: process.env.GITLAB_SOURCE_BRANCH ?? 'release/v' + (process.env.VERSION ?? packageJson.version),
-		targetBranch: process.env.GITLAB_TARGET_BRANCH ?? 'main',
-		pushSourceBranch: process.env.PUSH_SOURCE_BRANCH ?? true,
-		createMergeRequest: process.env.CREATE_MERGE_REQUEST ?? true,
-		mergeDescription: process.env.GITLAB_MERGE_DESCRIPTION ?? null,
-		sslVerify: process.env.SSL_VERIFY ?? false,
-		changelogOutputPath: process.env.CHANGELOG_OUTPUT_PATH ?? process.env.BITBUCKET_PIPE_SHARED_STORAGE_DIR ?? null,
-	};
-}
-
-/**
  * Retrieves the changelog diff between the current HEAD and the target branch HEAD.
  * @param path - The path to the Git repository.
  * @returns A Promise that resolves to the changelog diff as a string, or null if an error occurs.
@@ -113,7 +90,7 @@ async function main(path: string) {
 	if (config.createMergeRequest) {
 		try {
 			const {web_url: webUrl} = await gitlab.MergeRequests.create(
-				config.projectId!,
+				config.projectId,
 				config.sourceBranch,
 				config.targetBranch,
 				`Release v${config.version}`,
@@ -130,10 +107,51 @@ async function main(path: string) {
 
 	if (config.changelogOutputPath) {
 		const outputPath = join(config.changelogOutputPath, 'CHANGELOG_DIFF.md');
-		await Bun.write(outputPath, config.mergeDescription!);
+		await Bun.write(outputPath, config.mergeDescription);
 		logger.info(`Wrote CHANGELOG.md to ${outputPath}`);
 	}
 }
 
-program.argument('<path>', 'Path of the repository to release').action(main);
+/**
+ * Retrieves the configuration options for the GitLab merge request pipeline.
+ * @param path - The path to the package.json file.
+ * @returns An object containing the configuration options.
+ */
+async function getConfig(path: string) {
+	const packageJson = await Bun.file(join(path, 'package.json')).json();
+
+	return {
+		gitlabToken: options.gitlabToken,
+		projectId: options.projectId,
+		gitlabUrl: options.gitlabUrl,
+		version: options.version ?? packageJson.version,
+		sourceBranch: options.sourceBranch ?? 'release/v' + (options.version ?? packageJson.version),
+		targetBranch: options.targetBranch,
+		pushSourceBranch: options.pushSourceBranch === 'true',
+		createMergeRequest: options.createMergeRequest === 'true',
+		mergeDescription: options.mergeDescription,
+		sslVerify: options.sslVerify === 'true',
+		changelogOutputPath: options.changelogOutputPath,
+		sshTunnelUrl: options.sshTunnelUrl,
+	};
+}
+
+program
+	.description('Create a GitLab merge request for a release using the CHANGELOG.md.')
+	.argument('<path>', 'Path of the repository to release')
+	.option('-t, --gitlabToken <token>', 'GitLab private token', process.env.GITLAB_TOKEN)
+	.option('-p, --projectId <projectId>', 'GitLab project ID', process.env.GITLAB_PROJECT_ID)
+	.option('-u, --gitlabUrl <url>', 'GitLab instance URL', process.env.GITLAB_URL ?? 'https://gitlab.com')
+	.option('-v, --version <version>', 'Release version')
+	.option('-s, --sourceBranch <branch>', 'Source branch for merge request')
+	.option('--targetBranch <branch>', 'Target branch for merge request', process.env.GITLAB_TARGET_BRANCH ?? 'main')
+	.option('--pushSourceBranch [boolean]', 'Push source branch or not', process.env.PUSH_SOURCE_BRANCH ?? 'true')
+	.option('--createMergeRequest [boolean]', 'Create a merge request or not', process.env.CREATE_MERGE_REQUEST ?? 'true')
+	.option('--mergeDescription <description>', 'Merge request description', process.env.GITLAB_MERGE_DESCRIPTION ?? 'Changelog between last two tags')
+	.option('--sslVerify [boolean]', 'SSL verification', process.env.SSL_VERIFY ?? 'false')
+	.option('--changelogOutputPath <path>', 'Path to output the CHANGELOG diff file', process.env.CHANGELOG_OUTPUT_PATH ?? undefined)
+	.option('--sshTunnelUrl <url>', 'SSH endpoint for creating an SSH tunnel to your GitLab', process.env.SSH_TUNNEL_URL ?? undefined)
+	.action(main);
+
 program.parse(process.argv);
+const options = program.opts();
