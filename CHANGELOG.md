@@ -1,3 +1,10 @@
+## [1.9.16](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.15...v1.9.16) (2023-10-07)
+
+
+### Bug Fixes
+
+* added --unshallow to fetch ([1176cdd](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/1176cddc2b577569d1c48d240afb113fe8166529))
+
 ## [1.9.15](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.14...v1.9.15) (2023-10-06)
 
 
