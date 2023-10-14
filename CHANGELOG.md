@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.16...v1.10.0) (2023-10-14)
+
+
+### Features
+
+* added ignore parameter to config and commandline (not working yet) ([438e41e](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/438e41e75b904a865a0deab7e4209509d7ef8c49))
+
 ## [1.9.16](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.15...v1.9.16) (2023-10-07)
 
 
