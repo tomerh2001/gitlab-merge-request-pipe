@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable new-cap */
@@ -7,7 +8,7 @@
 import process from 'node:process';
 import {join} from 'node:path';
 import {Gitlab} from '@gitbeaker/rest';
-import git from 'simple-git';
+import git, {type SimpleGit} from 'simple-git';
 import pino from 'pino';
 import PinoPretty from 'pino-pretty';
 import {program} from 'commander';
@@ -80,7 +81,7 @@ async function main(path: string) {
 	}
 
 	if (config.pushSourceBranch) {
-		await simpleGit.push(['-f', 'gitlab', `HEAD:${config.sourceBranch}`]);
+		await pushSourceBranch(simpleGit, config);
 		logger.info(`Pushed the current state as "${config.sourceBranch}" to ${repoUrl}`);
 	}
 
@@ -115,6 +116,10 @@ async function main(path: string) {
 	}
 }
 
+async function pushSourceBranch(git: SimpleGit, config: any) {
+	await git.push(['-f', 'gitlab', `HEAD:${config.sourceBranch}`]);
+}
+
 /**
  * Retrieves the configuration options for the GitLab merge request pipeline.
  * @param path - The path to the package.json file.
@@ -144,6 +149,10 @@ program
 	.option('--mergeDescription <description>', 'Merge request description', process.env.GITLAB_MERGE_DESCRIPTION ?? undefined)
 	.option('--sslVerify [boolean]', 'SSL verification', process.env.SSL_VERIFY ?? false)
 	.option('--changelogOutputPath <path>', 'Path to output the CHANGELOG diff file', process.env.CHANGELOG_OUTPUT_PATH ?? process.env.BITBUCKET_PIPE_SHARED_STORAGE_DIR ?? undefined)
+	.option('-i, --ignore <path>', 'Add a path to ignore',
+		(path, previous = []) => [...previous, path],
+		process.env.GITLAB_IGNORE_PATHS?.split(';').map(x => x?.trim()) ?? [],
+	)
 	.action(main);
 
 program.parse(process.argv);
