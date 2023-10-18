@@ -12,9 +12,9 @@
 import process from 'node:process';
 import {join} from 'node:path';
 import {Gitlab} from '@gitbeaker/rest';
-import git, {type SimpleGit} from 'simple-git';
+import git from 'simple-git';
 import {program} from 'commander';
-import {backupGitAttributes, getOriginalGitConfig, handleIgnorePath, restoreGitAttributes} from './git';
+import {pushSourceBranch} from './git';
 import {logger} from './logger';
 
 /**
@@ -117,54 +117,6 @@ async function main(path: string) {
 	}
 }
 
-async function pushSourceBranch(git: SimpleGit, config: any) {
-	const originalConfig = await getOriginalGitConfig(git);
-	try {
-		const gitattributesBackedUp = await backupGitAttributes(git);
-
-		if (!originalConfig.name) {
-			await git.addConfig('user.name', 'Automated Process');
-		}
-
-		if (!originalConfig.email) {
-			await git.addConfig('user.email', 'auto@process.com');
-		}
-
-		logger.info(`Switching to "${config.sourceBranch}" for operations...`);
-		await git.checkout(config.sourceBranch);
-
-		logger.info(`Ensuring ignored paths remain unchanged from "${config.targetBranch}" in source branch...`);
-		for (const ignorePath of config.ignore) {
-			await handleIgnorePath(git, ignorePath, config.targetBranch);
-		}
-
-		logger.info(`Pushing the current state as "${config.sourceBranch}" to GitLab after overlaying ignored paths.`);
-		await git.push(['-f', 'gitlab', `HEAD:${config.sourceBranch}`]);
-
-		if (gitattributesBackedUp) {
-			await restoreGitAttributes(git);
-		}
-	} catch (error) {
-		logger.error(`Error encountered: ${error.message}`);
-		if (await backupGitAttributes(git)) {
-			await restoreGitAttributes(git);
-		}
-	} finally {
-		// Try restoring original git configs if they were unset
-		if (!originalConfig.name) {
-			try {
-				await git.raw(['config', '--unset', 'user.name']);
-			} catch { /* swallow error */ }
-		}
-
-		if (!originalConfig.email) {
-			try {
-				await git.raw(['config', '--unset', 'user.email']);
-			} catch { /* swallow error */ }
-		}
-	}
-}
-
 /**
  * Retrieves the configuration options for the GitLab merge request pipeline.
  * @param path - The path to the package.json file.
@@ -201,4 +153,8 @@ program
 	.action(main);
 
 program.parse(process.argv);
+
+/**
+ * Command line options for the GitLab merge request pipeline.
+ */
 const options = program.opts();
