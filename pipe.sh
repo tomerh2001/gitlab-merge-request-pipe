@@ -37,7 +37,7 @@ if [ -n "$SSH_TUNNEL_URL" ]; then
     fi
 
     # Update GITLAB_URL
-    export GITLAB_URL=$scheme://localhost:$remote_port/
+    export GITLAB_URL=$scheme://localhost:$remote_port
     echo "SSH tunnel created. New GITLAB_URL is $GITLAB_URL"
 fi
 
