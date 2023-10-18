@@ -6,7 +6,7 @@ ARG GH_REPO
 LABEL org.opencontainers.image.source $GH_REPO
 WORKDIR /repo
 
-COPY package.json bun.lockb index.ts ./
+COPY package.json bun.lockb *.ts ./
 RUN apk add --no-cache git openssh-client && \
     bun install
 

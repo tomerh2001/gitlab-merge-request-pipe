@@ -1,19 +1,21 @@
 #!/usr/bin/env node
+/* eslint-disable import/no-cycle */
+/* eslint-disable import/extensions */
+/* eslint-disable no-await-in-loop */
+
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
-/* eslint-disable new-cap */
+
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import process from 'node:process';
 import {join} from 'node:path';
 import {Gitlab} from '@gitbeaker/rest';
 import git, {type SimpleGit} from 'simple-git';
-import pino from 'pino';
-import PinoPretty from 'pino-pretty';
 import {program} from 'commander';
-
-const logger = pino(PinoPretty({ignore: 'pid,hostname'}));
+import {backupGitAttributes, getOriginalGitConfig, handleIgnorePath, restoreGitAttributes} from './git';
+import {logger} from './logger';
 
 /**
  * Retrieves the changelog diff between the current HEAD and the target branch HEAD.
@@ -25,7 +27,6 @@ async function getChangelog(path: string) {
 		const config = await getConfig(path);
 		const targetBranch = config.targetBranch;
 		const simpleGit = git(path).env({GIT_SSL_NO_VERIFY: config.sslVerify.toString()});
-		// await simpleGit.fetch(['--all']);
 
 		const currentHead = await simpleGit.revparse(['HEAD']);
 		const gitlab = new Gitlab({host: config.gitlabUrl, token: config.gitlabToken});
@@ -117,7 +118,51 @@ async function main(path: string) {
 }
 
 async function pushSourceBranch(git: SimpleGit, config: any) {
-	await git.push(['-f', 'gitlab', `HEAD:${config.sourceBranch}`]);
+	const originalConfig = await getOriginalGitConfig(git);
+	try {
+		const gitattributesBackedUp = await backupGitAttributes(git);
+
+		if (!originalConfig.name) {
+			await git.addConfig('user.name', 'Automated Process');
+		}
+
+		if (!originalConfig.email) {
+			await git.addConfig('user.email', 'auto@process.com');
+		}
+
+		logger.info(`Switching to "${config.sourceBranch}" for operations...`);
+		await git.checkout(config.sourceBranch);
+
+		logger.info(`Ensuring ignored paths remain unchanged from "${config.targetBranch}" in source branch...`);
+		for (const ignorePath of config.ignore) {
+			await handleIgnorePath(git, ignorePath, config.targetBranch);
+		}
+
+		logger.info(`Pushing the current state as "${config.sourceBranch}" to GitLab after overlaying ignored paths.`);
+		await git.push(['-f', 'gitlab', `HEAD:${config.sourceBranch}`]);
+
+		if (gitattributesBackedUp) {
+			await restoreGitAttributes(git);
+		}
+	} catch (error) {
+		logger.error(`Error encountered: ${error.message}`);
+		if (await backupGitAttributes(git)) {
+			await restoreGitAttributes(git);
+		}
+	} finally {
+		// Try restoring original git configs if they were unset
+		if (!originalConfig.name) {
+			try {
+				await git.raw(['config', '--unset', 'user.name']);
+			} catch { /* swallow error */ }
+		}
+
+		if (!originalConfig.email) {
+			try {
+				await git.raw(['config', '--unset', 'user.email']);
+			} catch { /* swallow error */ }
+		}
+	}
 }
 
 /**
