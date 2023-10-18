@@ -1,3 +1,15 @@
+# [1.11.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.10.0...v1.11.0) (2023-10-18)
+
+
+### Bug Fixes
+
+* added docs to functions and variables ([892a680](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/892a6804966050c4bd052a9794db304c31af5704))
+
+
+### Features
+
+* :triangular_flag_on_post: added basic ignore functionality ([aff7ab7](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/aff7ab704e0cc5afbea7419ccd7181f5a39bf1a3))
+
 # [1.10.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.9.16...v1.10.0) (2023-10-14)
 
 
