@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.11.2...v1.12.0) (2023-10-22)
+
+
+### Features
+
+* added fetchAll step ([b21873f](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/b21873f318963f0e98f9402eeb14329c2dca0fca))
+
 ## [1.11.2](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.11.1...v1.11.2) (2023-10-22)
 
 
