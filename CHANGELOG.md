@@ -1,3 +1,10 @@
+## [1.12.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.12.0...v1.12.1) (2023-10-22)
+
+
+### Bug Fixes
+
+* fixed a bug that prevented checking out files from gitlab to preserve their state ([3cf7a0b](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/3cf7a0bd4a091544d032a207d06a73e07c372b3d))
+
 # [1.12.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.11.2...v1.12.0) (2023-10-22)
 
 
