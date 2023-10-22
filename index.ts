@@ -88,7 +88,7 @@ async function main(path: string) {
 			await simpleGit.fetch(['--all']);
 			logger.info('Fetched from all remotes');
 		} catch (error) {
-			logger.error(error, 'Failed to fetch from all remotes');
+			logger.error(error?.message, 'Failed to fetch from all remotes');
 		}
 	}
 

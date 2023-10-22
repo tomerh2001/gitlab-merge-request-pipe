@@ -61,9 +61,9 @@ export async function getOriginalGitConfig(git: SimpleGit): Promise<{name?: stri
 export async function handleIgnorePath(git: SimpleGit, ignorePath: string, config: any): Promise<void> {
 	try {
 		await git.checkout([`gitlab/${config.targetBranch}`, '--', ignorePath]);
+		await git.commit(`Checked out ${ignorePath} from "${config.targetBranch}" to preserve its state.`, [ignorePath]);
 		logger.info(`Checked out ${ignorePath} from "${config.targetBranch}" to preserve its state.`);
-	} catch (error) {
-		logger.warn(`Failed to checkout ${`gitlab/${ignorePath}`} from "${config.targetBranch}". Error: ${error.message}`);
+	} catch {
 		await removeFile(git, ignorePath, config.targetBranch);
 	}
 }
@@ -77,7 +77,7 @@ export async function handleIgnorePath(git: SimpleGit, ignorePath: string, confi
 export async function removeFile(git: SimpleGit, ignorePath: string, targetBranch: string) {
 	try {
 		await git.raw(['rm', '-r', '-f', ignorePath]);
-		await git.commit(`Remove ${ignorePath}`, [ignorePath]);
+		await git.commit(`Removed ${ignorePath} from the source branch as it doesn't exist in "${targetBranch}".`, [ignorePath]);
 		logger.info(`Removed ${ignorePath} from the source branch as it doesn't exist in "${targetBranch}".`);
 	} catch (rmError) {
 		logger.warn(`Failed to remove ${ignorePath} from the source branch. Error: ${rmError.message}`);
