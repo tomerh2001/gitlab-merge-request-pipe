@@ -1,3 +1,10 @@
+## [1.11.2](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.11.1...v1.11.2) (2023-10-22)
+
+
+### Bug Fixes
+
+* added recursive file deletion ([8ccf15a](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/8ccf15a6ff6b4253b5b3553b18d9707620a8708c))
+
 ## [1.11.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.11.0...v1.11.1) (2023-10-22)
 
 
