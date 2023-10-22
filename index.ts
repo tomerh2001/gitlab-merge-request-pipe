@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-/* eslint-disable import/no-cycle */
+/* eslint-disable unicorn/no-await-expression-member */
+
 /* eslint-disable import/extensions */
-/* eslint-disable no-await-in-loop */
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
@@ -18,8 +18,8 @@ import {pushSourceBranch} from './git';
 import {logger} from './logger';
 
 /**
- * Retrieves the changelog diff between the current HEAD and the target branch HEAD.
- * @param path - The path to the Git repository.
+ * Retrieves the changelog diff between the current HEAD and the target branch.
+ * @param path - The path to the local repository.
  * @returns A Promise that resolves to the changelog diff as a string, or null if an error occurs.
  */
 async function getChangelog(path: string) {
@@ -38,6 +38,10 @@ async function getChangelog(path: string) {
 		}
 
 		const targetBranchHead = targetBranchDetails.commit.id;
+		if (!(await simpleGit.branch()).all.includes(targetBranch)) {
+			logger.error(`Branch ${targetBranch} does not exist in the local repository, unable to get diff. Returning the full changelog.`);
+			return await Bun.file(join(path, 'CHANGELOG.md')).text();
+		}
 
 		logger.info({previousHead: targetBranchHead, currentHead}, 'Getting CHANGELOG diff between commits');
 		const changelogDiff = await simpleGit.diff([`${targetBranchHead}..${currentHead}`, '--', 'CHANGELOG.md']);
