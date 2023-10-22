@@ -26,7 +26,7 @@ async function getChangelog(path: string) {
 	try {
 		const config = await getConfig(path);
 		const targetBranch = config.targetBranch;
-		const simpleGit = git(path).env({GIT_SSL_NO_VERIFY: config.sslVerify.toString()});
+		const simpleGit = git(path).env({GIT_SSL_NO_VERIFY: config.sslVerify.toString() === 'false'});
 
 		const currentHead = await simpleGit.revparse(['HEAD']);
 		const gitlab = new Gitlab({host: config.gitlabUrl, token: config.gitlabToken});
@@ -65,9 +65,7 @@ async function main(path: string) {
 	logger.info(config, 'Configuration');
 
 	const gitlab = new Gitlab({host: config.gitlabUrl, token: config.gitlabToken});
-	const simpleGit = git(path).env({
-		GIT_SSL_NO_VERIFY: config.sslVerify.toString(),
-	});
+	const simpleGit = git(path).env({GIT_SSL_NO_VERIFY: config.sslVerify.toString() === 'false'});
 
 	const project = await gitlab.Projects.show(config.projectId);
 
@@ -83,6 +81,15 @@ async function main(path: string) {
 	if (!remotes.some(remote => remote.name === 'gitlab')) {
 		await simpleGit.addRemote('gitlab', repoUrl);
 		logger.info('Added git remote "gitlab"');
+	}
+
+	if (config.fetchAll) {
+		try {
+			await simpleGit.fetch(['--all']);
+			logger.info('Fetched from all remotes');
+		} catch (error) {
+			logger.error(error, 'Failed to fetch from all remotes');
+		}
 	}
 
 	if (config.pushSourceBranch) {
@@ -150,6 +157,7 @@ program
 	.option('--mergeDescription <description>', 'Merge request description', process.env.GITLAB_MERGE_DESCRIPTION ?? undefined)
 	.option('--sslVerify [boolean]', 'SSL verification', process.env.SSL_VERIFY ?? false)
 	.option('--changelogOutputPath <path>', 'Path to output the CHANGELOG diff file', process.env.CHANGELOG_OUTPUT_PATH ?? process.env.BITBUCKET_PIPE_SHARED_STORAGE_DIR ?? undefined)
+	.option('--fetchAll [boolean]', 'Fetch all remotes', process.env.FETCH_ALL ?? true)
 	.option('-i, --ignore <path>', 'Add a path to ignore',
 		(path, previous = []) => [...previous, path],
 		process.env.GITLAB_IGNORE_PATHS?.split(';').map(x => x?.trim()) ?? [],

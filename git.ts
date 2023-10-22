@@ -58,12 +58,13 @@ export async function getOriginalGitConfig(git: SimpleGit): Promise<{name?: stri
  * @param ignorePath - The path of the file to ignore.
  * @param targetBranch - The name of the target branch.
  */
-export async function handleIgnorePath(git: SimpleGit, ignorePath: string, targetBranch: string): Promise<void> {
+export async function handleIgnorePath(git: SimpleGit, ignorePath: string, config: any): Promise<void> {
 	try {
-		await git.checkout([targetBranch, '--', ignorePath]);
-		logger.info(`Checked out ${ignorePath} from "${targetBranch}" to preserve its state.`);
-	} catch {
-		await removeFile(git, ignorePath, targetBranch);
+		await git.checkout([`gitlab/${config.targetBranch}`, '--', ignorePath]);
+		logger.info(`Checked out ${ignorePath} from "${config.targetBranch}" to preserve its state.`);
+	} catch (error) {
+		logger.warn(`Failed to checkout ${`gitlab/${ignorePath}`} from "${config.targetBranch}". Error: ${error.message}`);
+		await removeFile(git, ignorePath, config.targetBranch);
 	}
 }
 
@@ -108,7 +109,7 @@ export async function pushSourceBranch(git: SimpleGit, config: any) {
 
 		logger.info(`Ensuring ignored paths remain unchanged from "${config.targetBranch}" in source branch...`);
 		for (const ignorePath of config.ignore) {
-			await handleIgnorePath(git, ignorePath, config.targetBranch);
+			await handleIgnorePath(git, ignorePath, config);
 		}
 
 		logger.info(`Pushing the current state as "${config.sourceBranch}" to GitLab after overlaying ignored paths.`);
