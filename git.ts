@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable import/extensions */
@@ -74,7 +75,7 @@ export async function handleIgnorePath(git: SimpleGit, ignorePath: string, targe
  */
 export async function removeFile(git: SimpleGit, ignorePath: string, targetBranch: string) {
 	try {
-		await git.raw(['rm', '-f', ignorePath]);
+		await git.raw(['rm', '-r', '-f', ignorePath]);
 		await git.commit(`Remove ${ignorePath}`, [ignorePath]);
 		logger.info(`Removed ${ignorePath} from the source branch as it doesn't exist in "${targetBranch}".`);
 	} catch (rmError) {
