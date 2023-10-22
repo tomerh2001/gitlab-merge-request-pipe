@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.11.0...v1.11.1) (2023-10-22)
+
+
+### Bug Fixes
+
+* added a failsafe when the target branch doesn't exist locally, the entire changelog is returned ([bfbf99a](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/bfbf99a57df024d27d4850becfd26a17e269d399))
+
 # [1.11.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.10.0...v1.11.0) (2023-10-18)
 
 
