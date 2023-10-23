@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable no-await-in-loop */
@@ -5,6 +6,7 @@
 
 import {type SimpleGit} from 'simple-git';
 import {logger} from './logger';
+import { Gitlab } from '@gitbeaker/core';
 
 /**
  * Backs up the .gitattributes file by renaming it to .gitattributes_backup.
@@ -143,8 +145,56 @@ export async function pushSourceBranch(git: SimpleGit, config: any) {
 	}
 }
 
-async function mergeTargetIntoSource(config: any, git: SimpleGit) {
+export async function mergeTargetIntoSource(config: any, git: SimpleGit) {
 	logger.info(`Merging "${config.targetBranch}" into "${config.sourceBranch}" using the "ours" strategy.`);
 	try {} catch {}
+}
+
+/**
+ * Adds a new GitLab remote to the repository.
+ *
+ * @param simpleGit - The SimpleGit instance to use.
+ * @param repoUrl - The URL of the GitLab repository to add as a remote.
+ * @returns A Promise that resolves when the remote has been added.
+ */
+export async function addGitlabRemote(simpleGit: SimpleGit, repoUrl: string) {
+	await simpleGit.addRemote('gitlab', repoUrl);
+	logger.info('Added git remote "gitlab"');
+}
+
+/**
+ * Fetches all changes from all remotes using SimpleGit.
+ * @param simpleGit - The SimpleGit instance to use for fetching.
+ */
+export async function fetchAll(simpleGit: SimpleGit) {
+	try {
+		await simpleGit.fetch(['--all']);
+		logger.info('Fetched from all remotes');
+	} catch (error) {
+		logger.error(error?.message, 'Failed to fetch from all remotes');
+	}
+}
+
+/**
+ * Creates a merge request on GitLab.
+ * @param gitlab - The GitLab instance to use.
+ * @param config - The configuration object containing the project ID, source branch, target branch, version, and merge description.
+ */
+export async function createMergeRequest(gitlab: Gitlab, config: any) {
+	try {
+		const {web_url: webUrl} = await gitlab.MergeRequests.create(
+			config.projectId,
+			config.sourceBranch,
+			config.targetBranch,
+			`Release v${config.version}`,
+			{
+				removeSourceBranch: true,
+				description: config.mergeDescription,
+			},
+		);
+		logger.info(`Merge request created at ${webUrl}`);
+	} catch (error) {
+		logger.error(error);
+	}
 }
 

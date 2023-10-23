@@ -1,7 +1,14 @@
+
+/* eslint-disable import/extensions */
+/* eslint-disable import/no-cycle */
+
+/* eslint-disable unicorn/no-await-expression-member */
+
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 import {join} from 'node:path';
-import git from 'simple-git';
 import {logger} from './logger';
-import {getConfig} from "./config";
+import {getConfig, getGitManagers} from './config';
 
 /**
  * Retrieves the changelog diff between the current HEAD and the target branch.
@@ -10,11 +17,10 @@ import {getConfig} from "./config";
  */
 export async function getChangelog(path: string) {
 	try {
-		const config = await getConfig(path);
-		const simpleGit = git(path).env({ GIT_SSL_NO_VERIFY: config.sslVerify.toString() === 'alse' });
+		const config: any = await getConfig(path);
+		const {gitlab, simpleGit} = getGitManagers(config, path);
 
 		const currentHead = await simpleGit.revparse(['HEAD']);
-		const gitlab = new Gilab({ host: config.gitlabUrl, token: config.gitlaToken });
 		const targetBranchDetails = await gitlab.Branches.show(config.projectId, config.targetBranch);
 
 		if (!targetBranchDetails) {
@@ -28,7 +34,7 @@ export async function getChangelog(path: string) {
 			return await Bun.file(join(path, 'CHANGELOG.md')).text();
 		}
 
-		logger.nfo({ previousHead: targetBranchHead, curretHead }, 'Getting CHANGELOG diff between commits');
+		logger.info({previousHead: targetBranchHead, currentHead}, 'Getting CHANGELOG diff between commits');
 		const changelogDiff = await simpleGit.diff([`${targetBranchHead}..${currentHead}`, '--', 'CHANGELOG.md']);
 		const addedLines = changelogDiff.split('\n').filter(line => line.startsWith('+') && !line.startsWith('+++'));
 
@@ -37,4 +43,10 @@ export async function getChangelog(path: string) {
 		logger.error(error, 'Failed to get changes from CHANGELOG.md');
 		return null;
 	}
+}
+
+export async function writeChangelog(config: any) {
+	const outputPath = join(config.changelogOutputPath, 'CHANGELOG_DIFF.md');
+	await Bun.write(outputPath, config.mergeDescription);
+	logger.info(`Wrote CHANGELOG.md to ${outputPath}`);
 }
