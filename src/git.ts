@@ -107,6 +107,10 @@ export async function pushSourceBranch(git: SimpleGit, config: any) {
 		logger.info(`Switching to "${config.sourceBranch}" for operations...`);
 		await git.checkoutLocalBranch(config.sourceBranch);
 
+		if (config.mergeTargetIntoSource) {
+			await mergeTargetIntoSource(config, git);
+		}
+
 		logger.info(`Ensuring ignored paths remain unchanged from "${config.targetBranch}" in source branch...`);
 		for (const ignorePath of config.ignore) {
 			await handleIgnorePath(git, ignorePath, config);
@@ -138,3 +142,9 @@ export async function pushSourceBranch(git: SimpleGit, config: any) {
 		}
 	}
 }
+
+async function mergeTargetIntoSource(config: any, git: SimpleGit) {
+	logger.info(`Merging "${config.targetBranch}" into "${config.sourceBranch}" using the "ours" strategy.`);
+	try {} catch {}
+}
+

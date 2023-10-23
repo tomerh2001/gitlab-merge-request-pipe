@@ -3,7 +3,7 @@
   "module": "index.ts",
   "type": "module",
   "bin": {
-    "gitlab-merge-request-pipe": "./index.ts"
+    "gitlab-merge-request-pipe": "./src/index.ts"
   },
   "devDependencies": {
     "@codedependant/semantic-release-docker": "^4.4.0",

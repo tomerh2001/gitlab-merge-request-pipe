@@ -45,4 +45,4 @@ echo "Turning off git safe.directory setting"
 git config --global --add safe.directory '*'
 echo "Running bun run /repo/index.ts $BITBUCKET_CLONE_DIR"
 
-bun run /repo/index.ts $BITBUCKET_CLONE_DIR
+bun run /repo/src/index.ts $BITBUCKET_CLONE_DIR

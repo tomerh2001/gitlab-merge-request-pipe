@@ -1,67 +1,28 @@
 #!/usr/bin/env node
-/* eslint-disable unicorn/no-await-expression-member */
-
+/* eslint-disable n/prefer-global/process */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/extensions */
-
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
-
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-import process from 'node:process';
 import {join} from 'node:path';
 import {Gitlab} from '@gitbeaker/rest';
 import git from 'simple-git';
 import {program} from 'commander';
-import {pushSourceBranch} from './git';
 import {logger} from './logger';
-
-/**
- * Retrieves the changelog diff between the current HEAD and the target branch.
- * @param path - The path to the local repository.
- * @returns A Promise that resolves to the changelog diff as a string, or null if an error occurs.
- */
-async function getChangelog(path: string) {
-	try {
-		const config = await getConfig(path);
-		const targetBranch = config.targetBranch;
-		const simpleGit = git(path).env({GIT_SSL_NO_VERIFY: config.sslVerify.toString() === 'false'});
-
-		const currentHead = await simpleGit.revparse(['HEAD']);
-		const gitlab = new Gitlab({host: config.gitlabUrl, token: config.gitlabToken});
-		const targetBranchDetails = await gitlab.Branches.show(config.projectId, targetBranch);
-
-		if (!targetBranchDetails) {
-			logger.error(`Unable to fetch details of branch ${targetBranch} from GitLab.`);
-			return null;
-		}
-
-		const targetBranchHead = targetBranchDetails.commit.id;
-		if (!(await simpleGit.branch()).all.includes(targetBranch)) {
-			logger.error(`Branch ${targetBranch} does not exist in the local repository, unable to get diff. Returning the full changelog.`);
-			return await Bun.file(join(path, 'CHANGELOG.md')).text();
-		}
-
-		logger.info({previousHead: targetBranchHead, currentHead}, 'Getting CHANGELOG diff between commits');
-		const changelogDiff = await simpleGit.diff([`${targetBranchHead}..${currentHead}`, '--', 'CHANGELOG.md']);
-		const addedLines = changelogDiff.split('\n').filter(line => line.startsWith('+') && !line.startsWith('+++'));
-
-		return addedLines.map(line => line.slice(1)).join('\n');
-	} catch (error) {
-		logger.error(error, 'Failed to get changes from CHANGELOG.md');
-		return null;
-	}
-}
+import {getChangelog} from './changelog';
+import {getConfig} from './config';
+import {pushSourceBranch} from './git';
 
 /**
  * Main function that performs the GitLab merge request pipeline.
  * @param path - The path to the Git repository.
  * @returns A Promise that resolves when the pipeline is complete.
  */
-async function main(path: string) {
+export async function main(path: string) {
 	logger.info({path});
-	const config = await getConfig(path);
+	const config: any = await getConfig(path);
 	logger.info(config, 'Configuration');
 
 	const gitlab = new Gitlab({host: config.gitlabUrl, token: config.gitlabToken});
@@ -129,21 +90,11 @@ async function main(path: string) {
 }
 
 /**
- * Retrieves the configuration options for the GitLab merge request pipeline.
- * @param path - The path to the package.json file.
- * @returns An object containing the configuration options.
+ * Defines the command-line interface for creating a GitLab merge request for a release using the CHANGELOG.md.
+ *
+ * @param program - The commander program instance.
  */
-async function getConfig(path: string) {
-	const packageJson = await Bun.file(join(path, 'package.json')).json();
-
-	return {
-		...options,
-		version: options.version ?? packageJson.version,
-		sourceBranch: options.sourceBranch ?? 'release/v' + (options.version ?? packageJson.version),
-	};
-}
-
-program
+export const command = program
 	.description('Create a GitLab merge request for a release using the CHANGELOG.md.')
 	.argument('<path>', 'Path of the repository to release')
 	.option('-t, --gitlabToken <token>', 'GitLab private token', process.env.GITLAB_TOKEN)
@@ -158,6 +109,7 @@ program
 	.option('--sslVerify [boolean]', 'SSL verification', process.env.SSL_VERIFY ?? false)
 	.option('--changelogOutputPath <path>', 'Path to output the CHANGELOG diff file', process.env.CHANGELOG_OUTPUT_PATH ?? process.env.BITBUCKET_PIPE_SHARED_STORAGE_DIR ?? undefined)
 	.option('--fetchAll [boolean]', 'Fetch all remotes', process.env.FETCH_ALL ?? true)
+	.option('--mergeTargetIntoSource [boolean]', 'Merge target branch into source branch', process.env.MERGE_TARGET_INTO_SOURCE ?? true)
 	.option('-i, --ignore <path>', 'Add a path to ignore',
 		(path, previous = []) => [...previous, path],
 		process.env.GITLAB_IGNORE_PATHS?.split(';').map(x => x?.trim()) ?? [],
@@ -169,4 +121,4 @@ program.parse(process.argv);
 /**
  * Command line options for the GitLab merge request pipeline.
  */
-const options = program.opts();
+export const options = program.opts();
