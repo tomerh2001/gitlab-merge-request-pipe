@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 /* eslint-disable n/prefer-global/process */
 
 /* eslint-disable import/extensions */
