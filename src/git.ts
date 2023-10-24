@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -5,8 +6,8 @@
 /* eslint-disable import/extensions */
 
 import {type SimpleGit} from 'simple-git';
+import {Gitlab} from '@gitbeaker/core';
 import {logger} from './logger';
-import { Gitlab } from '@gitbeaker/core';
 
 /**
  * Backs up the .gitattributes file by renaming it to .gitattributes_backup.
@@ -145,9 +146,38 @@ export async function pushSourceBranch(git: SimpleGit, config: any) {
 	}
 }
 
+/**
+ * Merges the target branch into the source branch using Git.
+ * @param config - The configuration object containing the target and source branch names.
+ * @param git - The SimpleGit instance to use for the merge.
+ * @returns A Promise that resolves when the merge is complete.
+ * @throws An error if the merge fails.
+ */
 export async function mergeTargetIntoSource(config: any, git: SimpleGit) {
-	logger.info(`Merging "${config.targetBranch}" into "${config.sourceBranch}" using the "ours" strategy.`);
-	try {} catch {}
+	try {
+		await git.stash();
+
+		try {
+			await git.mergeFromTo(`gitlab/${config.targetBranch}`, config.sourceBranch, ['--no-commit']);
+			logger.info(`Merged gitlab/"${config.targetBranch}" into "${config.sourceBranch}"`);
+		} catch {
+			logger.warn('Merge had conflicts. Attempting to resolve using "ours"...');
+		}
+
+		await backupGitAttributes(git);
+
+		const mergeStatus = await git.status();
+		for (const file of mergeStatus.conflicted) {
+			await git.raw(['checkout', '--ours', file]);
+			await git.add(file);
+			logger.info(`Fixed merge conflict for ${file}`);
+		}
+
+		await git.commit(`Merged gitlab/"${config.targetBranch}" into "${config.sourceBranch}"`);
+		logger.info(`Committed merge of gitlab/"${config.targetBranch}" into "${config.sourceBranch}"`);
+	} catch (error) {
+		logger.error(`Failed to merge gitlab/"${config.targetBranch}" into "${config.sourceBranch}": ${error.message}`);
+	}
 }
 
 /**
