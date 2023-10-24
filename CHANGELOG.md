@@ -1,3 +1,10 @@
+## [1.12.3](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.12.2...v1.12.3) (2023-10-24)
+
+
+### Bug Fixes
+
+* added merge target into source logic ([38846db](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/38846db70d8e3cdeee005810194b9990b119ec47))
+
 ## [1.12.2](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.12.1...v1.12.2) (2023-10-24)
 
 
