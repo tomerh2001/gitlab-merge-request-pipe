@@ -1,3 +1,10 @@
+## [1.12.4](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.12.3...v1.12.4) (2023-10-24)
+
+
+### Bug Fixes
+
+* added special case where ours version doesnt exist ([540e03f](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/540e03f37aa398f2dbbee6041bb8b1a0d7075ffd))
+
 ## [1.12.3](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.12.2...v1.12.3) (2023-10-24)
 
 
