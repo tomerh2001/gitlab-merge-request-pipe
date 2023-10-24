@@ -1,3 +1,10 @@
+## [1.12.2](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.12.1...v1.12.2) (2023-10-24)
+
+
+### Bug Fixes
+
+* removed comment ([c9e9dff](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/c9e9dff0973579586349ca4be9ae0e36306c7987))
+
 ## [1.12.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.12.0...v1.12.1) (2023-10-22)
 
 
