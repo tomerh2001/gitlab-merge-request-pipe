@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
@@ -168,9 +169,20 @@ export async function mergeTargetIntoSource(config: any, git: SimpleGit) {
 
 		const mergeStatus = await git.status();
 		for (const file of mergeStatus.conflicted) {
-			await git.raw(['checkout', '--ours', file]);
+			try {
+				await git.raw(['checkout', '--ours', file]);
+				logger.info(`Fixed merge conflict for ${file} using 'ours'`);
+			} catch (checkoutError) {
+				// Handle special case where 'ours' version doesn't exist
+				if (checkoutError.message.includes('does not have our version')) {
+					await git.raw(['checkout', '--theirs', file]);
+					logger.info(`Fixed merge conflict for ${file} using 'theirs'`);
+				} else {
+					throw checkoutError; // Re-throw any other unexpected error
+				}
+			}
+
 			await git.add(file);
-			logger.info(`Fixed merge conflict for ${file}`);
 		}
 
 		await git.commit(`Merged gitlab/"${config.targetBranch}" into "${config.sourceBranch}"`);
