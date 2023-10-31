@@ -2,8 +2,6 @@
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-cycle */
 
-/* eslint-disable unicorn/no-await-expression-member */
-
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
 import {join} from 'node:path';
@@ -11,31 +9,31 @@ import {logger} from './logger';
 import {getConfig, getGitManagers} from './config';
 
 /**
- * Retrieves the changelog diff between the current HEAD and the target branch.
+ * Retrieves the changes made to the CHANGELOG.md file between the target branch and the current HEAD.
+ * If the file is not found in the target branch, returns the local CHANGELOG.md file.
  * @param path - The path to the local repository.
- * @returns A Promise that resolves to the changelog diff as a string, or null if an error occurs.
+ * @returns A string containing the added lines to the CHANGELOG.md file, or null if an error occurred.
  */
 export async function getChangelog(path: string) {
 	try {
 		const config: any = await getConfig(path);
 		const {gitlab, simpleGit} = getGitManagers(config, path);
 
-		const currentHead = await simpleGit.revparse(['HEAD']);
-		const targetBranchDetails = await gitlab.Branches.show(config.projectId, config.targetBranch);
-
-		if (!targetBranchDetails) {
-			logger.error(`Unable to fetch details of branch ${config.targetBranch} from GitLab.`);
+		const localChangelog = await simpleGit.show(['--', 'CHANGELOG.md']).catch(() => null);
+		if (!localChangelog) {
+			logger.error('CHANGELOG.md not found in local repository.');
 			return null;
 		}
 
-		const targetBranchHead = targetBranchDetails.commit.id;
-		if (!(await simpleGit.branch()).all.includes(config.targetBranch)) {
-			logger.error(`Branch ${config.targetBranch} does not exist in the local repository, unable to get diff. Returning the full changelog.`);
-			return await Bun.file(join(path, 'CHANGELOG.md')).text();
+		let gitlabChangelog: any = '';
+		try {
+			gitlabChangelog = await gitlab.RepositoryFiles.showRaw(config.projectId, 'CHANGELOG.md', config.targetBranch);
+		} catch {
+			return localChangelog;
 		}
 
-		logger.info({previousHead: targetBranchHead, currentHead}, 'Getting CHANGELOG diff between commits');
-		const changelogDiff = await simpleGit.diff([`${targetBranchHead}..${currentHead}`, '--', 'CHANGELOG.md']);
+		const currentHead = await simpleGit.revparse(['HEAD']);
+		const changelogDiff = await simpleGit.diff([`${config.targetBranch}..${currentHead}`, '--', 'CHANGELOG.md']);
 		const addedLines = changelogDiff.split('\n').filter(line => line.startsWith('+') && !line.startsWith('+++'));
 
 		return addedLines.map(line => line.slice(1)).join('\n');
