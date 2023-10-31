@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-cycle */
@@ -9,15 +12,15 @@ import {logger} from './logger';
 import {getConfig, getGitManagers} from './config';
 
 /**
- * Retrieves the changes made to the CHANGELOG.md file between the target branch and the current HEAD.
- * If the file is not found in the target branch, returns the local CHANGELOG.md file.
+ * Retrieves the changes from the local CHANGELOG.md file that are not in the GitLab changelog.
+ * If there's no changelog on GitLab, returns the local one.
  * @param path - The path to the local repository.
- * @returns A string containing the added lines to the CHANGELOG.md file, or null if an error occurred.
+ * @returns A string containing the new changes in the local CHANGELOG.md file that are not in the GitLab changelog.
  */
 export async function getChangelog(path: string) {
 	try {
 		const config: any = await getConfig(path);
-		const {gitlab, simpleGit} = getGitManagers(config, path);
+		const {gitlab} = getGitManagers(config, path);
 
 		const localChangelog = await Bun.file(join(path, 'CHANGELOG.md')).text();
 		if (!localChangelog) {
@@ -28,14 +31,15 @@ export async function getChangelog(path: string) {
 		try {
 			gitlabChangelog = await gitlab.RepositoryFiles.showRaw(config.projectId, 'CHANGELOG.md', config.targetBranch);
 		} catch {
+			// If there's no changelog on GitLab, return the local one
 			return localChangelog;
 		}
 
-		const currentHead = await simpleGit.revparse(['HEAD']);
-		const changelogDiff = await simpleGit.diff([`${config.targetBranch}..${currentHead}`, '--', 'CHANGELOG.md']);
-		const addedLines = changelogDiff.split('\n').filter(line => line.startsWith('+') && !line.startsWith('+++'));
+		const localChangelogLines = localChangelog.split('\n');
+		const gitlabChangelogLines = gitlabChangelog.split('\n');
 
-		return addedLines.map(line => line.slice(1)).join('\n');
+		// Get the new changes in the local CHANGELOG.md file that are not in the GitLab changelog
+		return localChangelogLines.filter((line: string) => !gitlabChangelogLines.includes(line)).join('\n');
 	} catch (error) {
 		logger.error(error, 'Failed to get changes from CHANGELOG.md');
 		return '';
