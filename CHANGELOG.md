@@ -1,3 +1,10 @@
+## [1.12.6](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.12.5...v1.12.6) (2023-10-31)
+
+
+### Bug Fixes
+
+* :technologist: fixed changelog diff bug ([c8302c4](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/c8302c43dbee9e34c40c103f1465f96aa37c45f9))
+
 ## [1.12.5](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.12.4...v1.12.5) (2023-10-31)
 
 
