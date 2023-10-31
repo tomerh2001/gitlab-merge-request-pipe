@@ -19,10 +19,9 @@ export async function getChangelog(path: string) {
 		const config: any = await getConfig(path);
 		const {gitlab, simpleGit} = getGitManagers(config, path);
 
-		const localChangelog = await simpleGit.show(['--', 'CHANGELOG.md']).catch(() => null);
+		const localChangelog = await Bun.file(join(path, 'CHANGELOG.md')).text();
 		if (!localChangelog) {
-			logger.error('CHANGELOG.md not found in local repository.');
-			return null;
+			throw new Error('CHANGELOG.md not found in local repository');
 		}
 
 		let gitlabChangelog: any = '';
@@ -39,7 +38,7 @@ export async function getChangelog(path: string) {
 		return addedLines.map(line => line.slice(1)).join('\n');
 	} catch (error) {
 		logger.error(error, 'Failed to get changes from CHANGELOG.md');
-		return null;
+		return '';
 	}
 }
 
