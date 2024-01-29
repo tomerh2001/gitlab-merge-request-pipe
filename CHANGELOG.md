@@ -1,3 +1,10 @@
+## [1.12.8](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.12.7...v1.12.8) (2024-1-29)
+
+
+### Bug Fixes
+
+* **package.json:** updated git breaker to 39.33.2 ([e16f347](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/e16f3470fdec07f0849d61a7a6c673538207c3ce))
+
 ## [1.12.7](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.12.6...v1.12.7) (2023-10-31)
 
 
