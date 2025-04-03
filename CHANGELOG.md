@@ -1,3 +1,10 @@
+## [1.14.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.14.0...v1.14.1) (2025-04-03)
+
+
+### Bug Fixes
+
+* **main.ts:** update import statements to use .js extensions for consistency ([f9e82fe](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/f9e82fee1d0b19ec37d92ff3bfb936dddfb354fb))
+
 # [1.14.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.13.2...v1.14.0) (2025-04-03)
 
 
