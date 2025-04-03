@@ -1,3 +1,10 @@
+## [1.13.2](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.13.1...v1.13.2) (2025-04-03)
+
+
+### Bug Fixes
+
+* **git:** enhance logging for merge request creation and deletion ([a6a007e](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/a6a007e7f2cf331f7e2eb2cae85bb7e9d2e765b0))
+
 ## [1.13.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.13.0...v1.13.1) (2025-04-03)
 
 
