@@ -1,3 +1,10 @@
+## [1.15.3](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.2...v1.15.3) (2025-04-03)
+
+
+### Bug Fixes
+
+* **git:** add support for filtering merge requests by labels ([0197142](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/019714202dd22351f1f83e6bdb7bdb6fe1a9a8d3))
+
 ## [1.15.2](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.1...v1.15.2) (2025-04-03)
 
 
