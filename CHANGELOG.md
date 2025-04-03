@@ -1,3 +1,11 @@
+## [1.15.5](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.4...v1.15.5) (2025-04-03)
+
+
+### Bug Fixes
+
+* **git:** increase wait time for merge request creation and log conflict status ([2ed2b19](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/2ed2b196f160beb300de63acb665942cd9b8d45e))
+* **git:** log message for disabled auto-merge requests ([f1ede52](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/f1ede52d76debcebeda404535a49a95207a2988d))
+
 ## [1.15.4](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.3...v1.15.4) (2025-04-03)
 
 
