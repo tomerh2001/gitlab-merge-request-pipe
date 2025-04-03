@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -7,6 +8,7 @@
 
 import {type SimpleGit} from 'simple-git';
 import {Gitlab} from '@gitbeaker/core';
+import {sleep} from 'bun';
 import {logger} from './logger.js';
 
 /**
@@ -221,7 +223,7 @@ export async function fetchAll(simpleGit: SimpleGit) {
  * @param gitlab - The GitLab instance to use.
  * @param config - The configuration object containing the project ID, source branch, target branch, version, and merge description.
  */
-export async function createMergeRequest(gitlab: Gitlab, config: any) {
+export async function createMergeRequest(simpleGit: SimpleGit, gitlab: Gitlab, config: any) {
 	try {
 		const mergeRequest = await gitlab.MergeRequests.create(
 			config.projectId,
@@ -235,6 +237,29 @@ export async function createMergeRequest(gitlab: Gitlab, config: any) {
 			},
 		);
 		logger.info(`Merge request created at ${mergeRequest.web_url}`);
+
+		await sleep(5000); // Wait for 5 seconds to allow the merge request to be created
+		const mergeRequestDetails = await gitlab.MergeRequests.show(config.projectId, mergeRequest.iid);
+		if (mergeRequestDetails.has_conflicts && config.resolveConflictsStrategy) {
+			logger.info('Merge request has conflicts. Attempting to resolve...');
+			await simpleGit.stash();
+
+			await simpleGit.mergeFromTo(`gitlab/${config.targetBranch}`, config.sourceBranch, ['--no-commit']);
+			logger.info(`Merged gitlab/${config.targetBranch} into ${config.sourceBranch} with --no-commit`);
+
+			const status = await simpleGit.status();
+			for (const file of status.conflicted) {
+				await simpleGit.raw(['checkout', `--${config.resolveConflictsStrategy}`, file]);
+				await simpleGit.add(file);
+				logger.info(`Resolved conflict in ${file} using "${config.resolveConflictsStrategy}" strategy`);
+			}
+
+			await simpleGit.commit(`Resolved merge conflicts using "${config.resolveConflictsStrategy}" strategy`);
+			logger.info(`Committed merge conflict resolution using "${config.resolveConflictsStrategy}" strategy`);
+
+			await simpleGit.push(['-f', 'gitlab', `HEAD:${config.sourceBranch}`]);
+			logger.info(`Force-pushed resolved branch to gitlab/${config.sourceBranch}`);
+		}
 
 		if (config.autoMerge) {
 			logger.info('Auto-merging the merge request...');

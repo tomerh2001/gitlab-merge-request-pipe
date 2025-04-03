@@ -57,7 +57,7 @@ export default async function main(path: string) {
 	}
 
 	if (config.createMergeRequest) {
-		await createMergeRequest(gitlab, config);
+		await createMergeRequest(simpleGit, gitlab, config);
 	}
 
 	if (config.changelogOutputPath) {

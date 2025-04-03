@@ -2,8 +2,6 @@
 
 /* eslint-disable n/prefer-global/process */
 
-/* eslint-disable import/extensions */
-
 import {program} from 'commander';
 import main from './main.js';
 
@@ -29,6 +27,7 @@ export const command = program
 	.option('--fetchAll [boolean]', 'Fetch all remotes', process.env.FETCH_ALL ?? true)
 	.option('--mergeTargetIntoSource [boolean]', 'Merge target branch into source branch', process.env.MERGE_TARGET_INTO_SOURCE ?? true)
 	.option('--deleteSameTargetMergeRequest [boolean]', 'Delete existing merge requests with the same target branch', process.env.GITLAB_DELETE_SAME_TARGET_MERGE_REQUEST ?? false)
+	.option('--resolveConflictsStrategy <strategy>', 'Conflict resolution strategy', process.env.GITLAB_MERGE_REQUEST_RESOLVE_CONFLICTS_STRATEGY ?? 'ours')
 	.option('--labels <labels>', 'Comma-separated list of labels for the merge request', process.env.GITLAB_MERGE_REQUEST_LABELS ?? undefined)
 	.option('--autoMerge [boolean]', 'Enable auto-merge for the merge request', process.env.GITLAB_AUTO_MERGE ?? false)
 	.option('-i, --ignore <path>', 'Add a path to ignore',
