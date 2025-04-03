@@ -241,10 +241,18 @@ export async function createMergeRequest(simpleGit: SimpleGit, gitlab: Gitlab, c
 				labels: config.labels?.split(',').map((label: string) => label.trim()),
 			},
 		);
-		logger.info(`Merge request created at ${mergeRequest.web_url}`);
+		logger.info(`Merge request created at ${mergeRequest.web_url} with ${mergeRequest.changes_count} changes`);
 
 		await sleep(10_000); // Wait for 5 seconds to allow the merge request to be created
 		const mergeRequestDetails = await gitlab.MergeRequests.show(config.projectId, mergeRequest.iid);
+
+		if (Number(mergeRequestDetails.changes_count) <= 0) {
+			logger.info('No changes found in the merge request. Deleting it...');
+			await gitlab.MergeRequests.edit(config.projectId, mergeRequest.iid, {stateEvent: 'close', removeSourceBranch: true});
+			logger.info(`Deleted merge request ${mergeRequest.web_url}`);
+			return;
+		}
+
 		if (mergeRequestDetails.has_conflicts && config.resolveConflictsStrategy) {
 			logger.info('Merge request has conflicts. Attempting to resolve...');
 			await simpleGit.stash();
