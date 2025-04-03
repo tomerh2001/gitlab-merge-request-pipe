@@ -51,6 +51,10 @@ export default async function main(path: string) {
 		logger.info(config.mergeDescription);
 	}
 
+	if (config.deleteSameTargetMergeRequest) {
+		await deleteSameTargetMergeRequest(gitlab, config);
+	}
+
 	if (config.createMergeRequest) {
 		await createMergeRequest(gitlab, config);
 	}

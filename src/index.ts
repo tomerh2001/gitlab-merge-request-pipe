@@ -28,6 +28,7 @@ export const command = program
 	.option('--changelogOutputPath <path>', 'Path to output the CHANGELOG diff file', process.env.CHANGELOG_OUTPUT_PATH ?? process.env.BITBUCKET_PIPE_SHARED_STORAGE_DIR ?? undefined)
 	.option('--fetchAll [boolean]', 'Fetch all remotes', process.env.FETCH_ALL ?? true)
 	.option('--mergeTargetIntoSource [boolean]', 'Merge target branch into source branch', process.env.MERGE_TARGET_INTO_SOURCE ?? true)
+	.option('--deleteSameTargetMergeRequest [boolean]', 'Delete existing merge requests with the same target branch', process.env.GITLAB_DELETE_SAME_TARGET_MERGE_REQUEST ?? false)
 	.option('-i, --ignore <path>', 'Add a path to ignore',
 		(path, previous = []) => [...previous, path],
 		process.env.GITLAB_IGNORE_PATHS?.split(';').map(x => x?.trim()) ?? [],

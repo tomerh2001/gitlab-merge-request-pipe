@@ -240,3 +240,23 @@ export async function createMergeRequest(gitlab: Gitlab, config: any) {
 	}
 }
 
+/**
+ * Deletes an existing merge requests with the same target branch.
+ * @param gitlab - The GitLab instance to use.
+ * @param config - The configuration object containing the project ID and target branch.
+ */
+export async function deleteSameTargetMergeRequest(gitlab: Gitlab, config: any) {
+	try {
+		const mergeRequests = await gitlab.MergeRequests.all({
+			projectId: config.projectId,
+			targetBranch: config.targetBranch,
+		});
+
+		for (const mergeRequest of mergeRequests) {
+			await gitlab.MergeRequests.remove(config.projectId, mergeRequest.iid);
+			logger.info(`Deleted existing merge request with the same target branch "${config.targetBranch}"`);
+		}
+	} catch (error) {
+		logger.error(error);
+	}
+}
