@@ -1,3 +1,11 @@
+# [1.13.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.12.8...v1.13.0) (2025-04-03)
+
+
+### Features
+
+* **git:** add auto-merge option for merge requests ([cb9406d](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/cb9406d4c66727027c9608ff2369dc61992cdbda))
+* **git:** add option to delete existing merge requests with the same target branch ([43b8936](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/43b8936eef7fea275efe84635ff9090d9d2fd7cb))
+
 ## [1.12.8](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.12.7...v1.12.8) (2024-1-29)
 
 
