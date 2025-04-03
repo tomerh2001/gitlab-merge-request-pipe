@@ -1,3 +1,10 @@
+## [1.15.10](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.9...v1.15.10) (2025-04-03)
+
+
+### Bug Fixes
+
+* **git:** remove process.exit call from error handling in createMergeRequest function ([64666d9](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/64666d90a1ab31580df208d9b39c5814b59851d1))
+
 ## [1.15.9](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.8...v1.15.9) (2025-04-03)
 
 
