@@ -1,3 +1,10 @@
+## [1.15.13](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.12...v1.15.13) (2025-04-03)
+
+
+### Bug Fixes
+
+* **git:** increase sleep duration to ensure merge request creation completion ([05d92c6](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/05d92c6e6ae3efbb77c913281ea377b9bf3b780c))
+
 ## [1.15.12](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.11...v1.15.12) (2025-04-03)
 
 
