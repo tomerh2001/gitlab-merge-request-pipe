@@ -1,3 +1,10 @@
+## [1.15.2](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.1...v1.15.2) (2025-04-03)
+
+
+### Bug Fixes
+
+* **git:** change merge request deletion to closing with source branch removal ([8869a7c](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/8869a7c66c5b398ddbae5b42c6aa8186ad84d31f))
+
 ## [1.15.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.0...v1.15.1) (2025-04-03)
 
 
