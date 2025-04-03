@@ -1,3 +1,10 @@
+## [1.15.12](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.11...v1.15.12) (2025-04-03)
+
+
+### Bug Fixes
+
+* **git:** change log level to warn for empty merge request deletion ([63dec72](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/63dec72f7e69ba541fd3d4fe66960f4fc321feb3))
+
 ## [1.15.11](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.10...v1.15.11) (2025-04-03)
 
 
