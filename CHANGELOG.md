@@ -1,3 +1,10 @@
+## [1.15.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.0...v1.15.1) (2025-04-03)
+
+
+### Bug Fixes
+
+* **git:** log message for no conflicts in merge requests ([f13cd4b](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/f13cd4b69480df67e40eb7d847eed3d052bb1b0e))
+
 # [1.15.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.14.1...v1.15.0) (2025-04-03)
 
 
