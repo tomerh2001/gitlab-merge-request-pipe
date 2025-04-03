@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.13.2...v1.14.0) (2025-04-03)
+
+
+### Features
+
+* **git:** add support for labels in merge requests ([7673c99](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/7673c99fb4c3455043d5338cb1d7f81f25bd70e0))
+
 ## [1.13.2](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.13.1...v1.13.2) (2025-04-03)
 
 
