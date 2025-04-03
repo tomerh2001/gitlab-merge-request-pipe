@@ -1,3 +1,10 @@
+## [1.15.4](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.3...v1.15.4) (2025-04-03)
+
+
+### Bug Fixes
+
+* **git:** filter merge requests to only include opened ones ([9dfd430](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/9dfd4308c52e2f8a4bd5348c9ec443f6a391af4b))
+
 ## [1.15.3](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.2...v1.15.3) (2025-04-03)
 
 
