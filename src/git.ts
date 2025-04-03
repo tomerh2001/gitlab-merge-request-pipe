@@ -240,13 +240,11 @@ export async function createMergeRequest(simpleGit: SimpleGit, gitlab: Gitlab, c
 
 		await sleep(10_000); // Wait for 5 seconds to allow the merge request to be created
 		const mergeRequestDetails = await gitlab.MergeRequests.show(config.projectId, mergeRequest.iid);
-		logger.info('Merge request has conflicts:', mergeRequestDetails.has_conflicts);
-
 		if (mergeRequestDetails.has_conflicts && config.resolveConflictsStrategy) {
 			logger.info('Merge request has conflicts. Attempting to resolve...');
 			await simpleGit.stash();
 
-			await simpleGit.mergeFromTo(`gitlab/${config.targetBranch}`, config.sourceBranch, ['--no-commit']);
+			await simpleGit.mergeFromTo(`gitlab/${config.targetBranch}`, config.sourceBranch, ['--no-commit', '--allow-unrelated-histories']);
 			logger.info(`Merged gitlab/${config.targetBranch} into ${config.sourceBranch} with --no-commit`);
 
 			const status = await simpleGit.status();
