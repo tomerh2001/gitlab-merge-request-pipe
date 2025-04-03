@@ -224,56 +224,52 @@ export async function fetchAll(simpleGit: SimpleGit) {
  * @param config - The configuration object containing the project ID, source branch, target branch, version, and merge description.
  */
 export async function createMergeRequest(simpleGit: SimpleGit, gitlab: Gitlab, config: any) {
-	try {
-		const mergeRequest = await gitlab.MergeRequests.create(
-			config.projectId,
-			config.sourceBranch,
-			config.targetBranch,
-			`Release v${config.version}`,
-			{
-				removeSourceBranch: true,
-				description: config.mergeDescription,
-				labels: config.labels?.split(',').map((label: string) => label.trim()),
-			},
-		);
-		logger.info(`Merge request created at ${mergeRequest.web_url}`);
+	const mergeRequest = await gitlab.MergeRequests.create(
+		config.projectId,
+		config.sourceBranch,
+		config.targetBranch,
+		`Release v${config.version}`,
+		{
+			removeSourceBranch: true,
+			description: config.mergeDescription,
+			labels: config.labels?.split(',').map((label: string) => label.trim()),
+		},
+	);
+	logger.info(`Merge request created at ${mergeRequest.web_url}`);
 
-		await sleep(10_000); // Wait for 5 seconds to allow the merge request to be created
-		const mergeRequestDetails = await gitlab.MergeRequests.show(config.projectId, mergeRequest.iid);
-		if (mergeRequestDetails.has_conflicts && config.resolveConflictsStrategy) {
-			logger.info('Merge request has conflicts. Attempting to resolve...');
-			await simpleGit.stash();
+	await sleep(10_000); // Wait for 5 seconds to allow the merge request to be created
+	const mergeRequestDetails = await gitlab.MergeRequests.show(config.projectId, mergeRequest.iid);
+	if (mergeRequestDetails.has_conflicts && config.resolveConflictsStrategy) {
+		logger.info('Merge request has conflicts. Attempting to resolve...');
+		await simpleGit.stash();
 
-			await simpleGit.mergeFromTo(`gitlab/${config.targetBranch}`, config.sourceBranch, ['--no-commit', '--allow-unrelated-histories']);
-			logger.info(`Merged gitlab/${config.targetBranch} into ${config.sourceBranch} with --no-commit`);
+		await simpleGit.mergeFromTo(`gitlab/${config.targetBranch}`, config.sourceBranch, ['--no-commit', '--allow-unrelated-histories']);
+		logger.info(`Merged gitlab/${config.targetBranch} into ${config.sourceBranch} with --no-commit`);
 
-			const status = await simpleGit.status();
-			for (const file of status.conflicted) {
-				await simpleGit.raw(['checkout', `--${config.resolveConflictsStrategy}`, file]);
-				await simpleGit.add(file);
-				logger.info(`Resolved conflict in ${file} using "${config.resolveConflictsStrategy}" strategy`);
-			}
-
-			await simpleGit.commit(`Resolved merge conflicts using "${config.resolveConflictsStrategy}" strategy`);
-			logger.info(`Committed merge conflict resolution using "${config.resolveConflictsStrategy}" strategy`);
-
-			await simpleGit.push(['-f', 'gitlab', `HEAD:${config.sourceBranch}`]);
-			logger.info(`Force-pushed resolved branch to gitlab/${config.sourceBranch}`);
-		} else {
-			logger.info('No conflicts found in the merge request.');
+		const status = await simpleGit.status();
+		for (const file of status.conflicted) {
+			await simpleGit.raw(['checkout', `--${config.resolveConflictsStrategy}`, file]);
+			await simpleGit.add(file);
+			logger.info(`Resolved conflict in ${file} using "${config.resolveConflictsStrategy}" strategy`);
 		}
 
-		if (config.autoMerge) {
-			logger.info('Auto-merging the merge request...');
-			await gitlab.MergeRequests.merge(config.projectId, mergeRequest.iid, {
-				shouldRemoveSourceBranch: true,
-			});
-			logger.info(`Auto-merged ${mergeRequest.web_url}`);
-		} else {
-			logger.info('Auto-merge is disabled. Please merge the request manually.');
-		}
-	} catch (error) {
-		logger.error(error);
+		await simpleGit.commit(`Resolved merge conflicts using "${config.resolveConflictsStrategy}" strategy`);
+		logger.info(`Committed merge conflict resolution using "${config.resolveConflictsStrategy}" strategy`);
+
+		await simpleGit.push(['-f', 'gitlab', `HEAD:${config.sourceBranch}`]);
+		logger.info(`Force-pushed resolved branch to gitlab/${config.sourceBranch}`);
+	} else {
+		logger.info('No conflicts found in the merge request.');
+	}
+
+	if (config.autoMerge) {
+		logger.info('Auto-merging the merge request...');
+		await gitlab.MergeRequests.merge(config.projectId, mergeRequest.iid, {
+			shouldRemoveSourceBranch: true,
+		});
+		logger.info(`Auto-merged ${mergeRequest.web_url}`);
+	} else {
+		logger.info('Auto-merge is disabled. Please merge the request manually.');
 	}
 }
 
