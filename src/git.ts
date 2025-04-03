@@ -4,11 +4,10 @@
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable no-await-in-loop */
-/* eslint-disable import/extensions */
 
 import {type SimpleGit} from 'simple-git';
 import {Gitlab} from '@gitbeaker/core';
-import {logger} from './logger';
+import {logger} from './logger.js';
 
 /**
  * Backs up the .gitattributes file by renaming it to .gitattributes_backup.
@@ -238,6 +237,7 @@ export async function createMergeRequest(gitlab: Gitlab, config: any) {
 		logger.info(`Merge request created at ${mergeRequest.web_url}`);
 
 		if (config.autoMerge) {
+			logger.info('Auto-merging the merge request...');
 			await gitlab.MergeRequests.merge(config.projectId, mergeRequest.iid, {
 				shouldRemoveSourceBranch: true,
 			});
@@ -255,12 +255,19 @@ export async function createMergeRequest(gitlab: Gitlab, config: any) {
  */
 export async function deleteSameTargetMergeRequest(gitlab: Gitlab, config: any) {
 	try {
+		logger.info(`Deleting existing merge requests with the same target branch "${config.targetBranch}"...`);
 		const mergeRequests = await gitlab.MergeRequests.all({
 			projectId: config.projectId,
 			targetBranch: config.targetBranch,
+			state: 'opened',
 		});
+		if (mergeRequests.length === 0) {
+			logger.info('No existing merge requests found with the same target branch.');
+			return;
+		}
 
 		for (const mergeRequest of mergeRequests) {
+			logger.info(`Deleting merge request ${mergeRequest.web_url}`);
 			await gitlab.MergeRequests.remove(config.projectId, mergeRequest.iid);
 			logger.info(`Deleted existing merge request with the same target branch "${config.targetBranch}"`);
 		}
