@@ -238,8 +238,10 @@ export async function createMergeRequest(simpleGit: SimpleGit, gitlab: Gitlab, c
 		);
 		logger.info(`Merge request created at ${mergeRequest.web_url}`);
 
-		await sleep(5000); // Wait for 5 seconds to allow the merge request to be created
+		await sleep(10_000); // Wait for 5 seconds to allow the merge request to be created
 		const mergeRequestDetails = await gitlab.MergeRequests.show(config.projectId, mergeRequest.iid);
+		logger.info('Merge request has conflicts:', mergeRequestDetails.has_conflicts);
+
 		if (mergeRequestDetails.has_conflicts && config.resolveConflictsStrategy) {
 			logger.info('Merge request has conflicts. Attempting to resolve...');
 			await simpleGit.stash();
