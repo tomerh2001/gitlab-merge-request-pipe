@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.14.1...v1.15.0) (2025-04-03)
+
+
+### Features
+
+* **git:** add conflict resolution strategy option for merge requests ([40c8c82](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/40c8c8292d85d29371c0ad40d7dbe532a2b8b54b))
+
 ## [1.14.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.14.0...v1.14.1) (2025-04-03)
 
 
