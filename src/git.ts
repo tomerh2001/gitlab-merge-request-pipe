@@ -271,6 +271,8 @@ export async function createMergeRequest(simpleGit: SimpleGit, gitlab: Gitlab, c
 				shouldRemoveSourceBranch: true,
 			});
 			logger.info(`Auto-merged ${mergeRequest.web_url}`);
+		} else {
+			logger.info('Auto-merge is disabled. Please merge the request manually.');
 		}
 	} catch (error) {
 		logger.error(error);
