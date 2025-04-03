@@ -294,7 +294,7 @@ export async function deleteSameTargetMergeRequest(gitlab: Gitlab, config: any) 
 
 		for (const mergeRequest of mergeRequests) {
 			logger.info(`Deleting merge request ${mergeRequest.web_url}`);
-			await gitlab.MergeRequests.remove(config.projectId, mergeRequest.iid);
+			await gitlab.MergeRequests.edit(config.projectId, mergeRequest.iid, {stateEvent: 'close', removeSourceBranch: true});
 			logger.info(`Deleted existing merge request with the same target branch "${config.targetBranch}"`);
 		}
 	} catch (error) {
