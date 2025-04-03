@@ -1,3 +1,10 @@
+## [1.15.8](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.7...v1.15.8) (2025-04-03)
+
+
+### Bug Fixes
+
+* **git:** enhance error handling and improve merge conflict resolution process ([5f67f14](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/5f67f14675de7176cd0434c00aa9343d8ab93d43))
+
 ## [1.15.7](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.6...v1.15.7) (2025-04-03)
 
 
