@@ -1,3 +1,10 @@
+## [1.13.1](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.13.0...v1.13.1) (2025-04-03)
+
+
+### Bug Fixes
+
+* **index.ts:** rename auto-merge option to autoMerge for consistency ([9ddd227](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/9ddd2279fe94d8ea20f1aeae558ba6d3386441f9))
+
 # [1.13.0](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.12.8...v1.13.0) (2025-04-03)
 
 
