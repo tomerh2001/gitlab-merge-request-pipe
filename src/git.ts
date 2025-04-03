@@ -292,7 +292,6 @@ export async function createMergeRequest(simpleGit: SimpleGit, gitlab: Gitlab, c
 		}
 	} catch (error) {
 		logger.error(error);
-		process.exit(1); // eslint-disable-line unicorn/no-process-exit, n/prefer-global/process
 	}
 }
 
