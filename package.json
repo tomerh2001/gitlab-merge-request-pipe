@@ -20,7 +20,7 @@
   "peerDependencies": {
     "typescript": "^5.8.2"
   },
-  "version": "1.15.8",
+  "version": "1.15.9",
   "scripts": {
     "test": "xo"
   },
