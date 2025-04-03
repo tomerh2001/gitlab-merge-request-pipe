@@ -1,3 +1,10 @@
+## [1.15.11](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.10...v1.15.11) (2025-04-03)
+
+
+### Bug Fixes
+
+* **git:** enhance merge request logging and handle empty changes by closing the request ([26acc16](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/26acc16b4cf70f0d21452aba7e9a4e5d21adcc1f))
+
 ## [1.15.10](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.9...v1.15.10) (2025-04-03)
 
 
