@@ -1,13 +1,14 @@
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable import/extensions */
-/* eslint-disable import/no-cycle */
 
-import {logger} from './logger';
-import {getChangelog, writeChangelog} from './changelog';
-import {getConfig, getGitManagers} from './config';
-import {pushSourceBranch, addGitlabRemote, fetchAll, createMergeRequest} from './git';
-import constructRepoUrl from './helpers/construct-repo-url';
+import {logger} from './logger.js';
+import {getChangelog, writeChangelog} from './changelog.js';
+import {getConfig, getGitManagers} from './config.js';
+import {
+	pushSourceBranch, addGitlabRemote, fetchAll, createMergeRequest,
+	deleteSameTargetMergeRequest,
+} from './git.js';
+import constructRepoUrl from './helpers/construct-repo-url.js';
 
 /**
  * Main function that performs the GitLab merge request pipeline.
