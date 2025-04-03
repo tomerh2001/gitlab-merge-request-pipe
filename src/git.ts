@@ -286,6 +286,7 @@ export async function deleteSameTargetMergeRequest(gitlab: Gitlab, config: any) 
 		const mergeRequests = await gitlab.MergeRequests.all({
 			projectId: config.projectId,
 			targetBranch: config.targetBranch,
+			labels: config.labels?.split(',').map((label: string) => label.trim()),
 		});
 		if (mergeRequests.length === 0) {
 			logger.info('No existing merge requests found with the same target branch.');
