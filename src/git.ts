@@ -243,7 +243,7 @@ export async function createMergeRequest(simpleGit: SimpleGit, gitlab: Gitlab, c
 		);
 		logger.info(`Merge request created at ${mergeRequest.web_url} with ${mergeRequest.changes_count} changes`);
 
-		await sleep(10_000); // Wait for 5 seconds to allow the merge request to be created
+		await sleep(10_000);
 		const mergeRequestDetails = await gitlab.MergeRequests.show(config.projectId, mergeRequest.iid);
 
 		if (Number(mergeRequestDetails.changes_count) <= 0) {
@@ -289,6 +289,7 @@ export async function createMergeRequest(simpleGit: SimpleGit, gitlab: Gitlab, c
 			logger.info('No conflicts found in the merge request.');
 		}
 
+		await sleep(10_000);
 		if (config.autoMerge) {
 			logger.info('Auto-merging the merge request...');
 			await gitlab.MergeRequests.merge(config.projectId, mergeRequest.iid, {
