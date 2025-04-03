@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/only-throw-error */
 
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/consistent-type-imports */
@@ -159,35 +160,39 @@ export async function mergeTargetIntoSource(config: any, git: SimpleGit) {
 	try {
 		await git.stash();
 
+		let mergeSummary;
 		try {
-			await git.mergeFromTo(`gitlab/${config.targetBranch}`, config.sourceBranch, ['--no-commit']);
-			logger.info(`Merged gitlab/"${config.targetBranch}" into "${config.sourceBranch}"`);
-		} catch {
-			logger.warn('Merge had conflicts. Attempting to resolve using "ours"...');
+			mergeSummary = await git.mergeFromTo(`gitlab/${config.targetBranch}`, config.sourceBranch, ['--no-commit', '--allow-unrelated-histories']);
+			logger.info(`Merged gitlab/${config.targetBranch} into ${config.sourceBranch} with --no-commit`);
+		} catch (mergeError: any) {
+			if (mergeError?.git?.conflicts) {
+				logger.warn('Merge had conflicts. Proceeding with manual resolution...');
+				mergeSummary = mergeError.git; // Use the conflict info from the error
+			} else {
+				throw mergeError;
+			}
 		}
 
-		await backupGitAttributes(git);
-
-		const mergeStatus = await git.status();
-		for (const file of mergeStatus.conflicted) {
-			try {
-				await git.raw(['checkout', '--ours', file]);
-				logger.info(`Fixed merge conflict for ${file} using 'ours'`);
-			} catch (checkoutError) {
-				// Handle special case where 'ours' version doesn't exist
-				if (checkoutError.message.includes('does not have our version')) {
-					await git.raw(['checkout', '--theirs', file]);
-					logger.info(`Fixed merge conflict for ${file} using 'theirs'`);
-				} else {
-					throw checkoutError; // Re-throw any other unexpected error
-				}
+		for (const conflict of mergeSummary.conflicts) {
+			if (!conflict.file) {
+				continue;
 			}
 
-			await git.add(file);
+			try {
+				await git.raw('checkout', `--${config.resolveConflictsStrategy}`, conflict.file);
+				await git.add(conflict.file);
+				logger.info(`Resolved conflict in ${conflict.file} using "${config.resolveConflictsStrategy}" strategy`);
+			} catch (conflictError) {
+				logger.error(`Failed to resolve conflict in ${conflict.file}: ${conflictError.message}`);
+				throw conflictError;
+			}
 		}
 
-		await git.commit(`Merged gitlab/"${config.targetBranch}" into "${config.sourceBranch}"`);
-		logger.info(`Committed merge of gitlab/"${config.targetBranch}" into "${config.sourceBranch}"`);
+		await git.commit(`Resolved merge conflicts using "${config.resolveConflictsStrategy}" strategy`);
+		logger.info(`Committed merge conflict resolution using "${config.resolveConflictsStrategy}" strategy`);
+
+		await git.push(['-f', 'gitlab', `HEAD:${config.sourceBranch}`]);
+		logger.info(`Force-pushed resolved branch to gitlab/${config.sourceBranch}`);
 	} catch (error) {
 		logger.error(`Failed to merge gitlab/"${config.targetBranch}" into "${config.sourceBranch}": ${error.message}`);
 	}
@@ -244,8 +249,18 @@ export async function createMergeRequest(simpleGit: SimpleGit, gitlab: Gitlab, c
 			logger.info('Merge request has conflicts. Attempting to resolve...');
 			await simpleGit.stash();
 
-			const mergeSummary = await simpleGit.mergeFromTo(`gitlab/${config.targetBranch}`, config.sourceBranch, ['--no-commit', '--allow-unrelated-histories']);
-			logger.info(`Merged gitlab/${config.targetBranch} into ${config.sourceBranch} with --no-commit`);
+			let mergeSummary;
+			try {
+				mergeSummary = await simpleGit.mergeFromTo(`gitlab/${config.targetBranch}`, config.sourceBranch, ['--no-commit', '--allow-unrelated-histories']);
+				logger.info(`Merged gitlab/${config.targetBranch} into ${config.sourceBranch} with --no-commit`);
+			} catch (mergeError: any) {
+				if (mergeError?.git?.conflicts) {
+					logger.warn('Merge had conflicts. Proceeding with manual resolution...');
+					mergeSummary = mergeError.git;
+				} else {
+					throw mergeError;
+				}
+			}
 
 			for (const conflict of mergeSummary.conflicts) {
 				if (!conflict.file) {
