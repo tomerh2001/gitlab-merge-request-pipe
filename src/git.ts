@@ -247,9 +247,9 @@ export async function createMergeRequest(simpleGit: SimpleGit, gitlab: Gitlab, c
 		const mergeRequestDetails = await gitlab.MergeRequests.show(config.projectId, mergeRequest.iid);
 
 		if (Number(mergeRequestDetails.changes_count) <= 0) {
-			logger.info('No changes found in the merge request. Deleting it...');
+			logger.warn('No changes found in the merge request. Deleting it...');
 			await gitlab.MergeRequests.edit(config.projectId, mergeRequest.iid, {stateEvent: 'close', removeSourceBranch: true});
-			logger.info(`Deleted merge request ${mergeRequest.web_url}`);
+			logger.warn(`Deleted merge request ${mergeRequest.web_url}`);
 			return;
 		}
 
