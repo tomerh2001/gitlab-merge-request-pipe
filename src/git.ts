@@ -259,6 +259,8 @@ export async function createMergeRequest(simpleGit: SimpleGit, gitlab: Gitlab, c
 
 			await simpleGit.push(['-f', 'gitlab', `HEAD:${config.sourceBranch}`]);
 			logger.info(`Force-pushed resolved branch to gitlab/${config.sourceBranch}`);
+		} else {
+			logger.info('No conflicts found in the merge request.');
 		}
 
 		if (config.autoMerge) {
@@ -284,8 +286,6 @@ export async function deleteSameTargetMergeRequest(gitlab: Gitlab, config: any) 
 		const mergeRequests = await gitlab.MergeRequests.all({
 			projectId: config.projectId,
 			targetBranch: config.targetBranch,
-			labels: config.labels?.split(',').map((label: string) => label.trim()),
-			state: 'opened',
 		});
 		if (mergeRequests.length === 0) {
 			logger.info('No existing merge requests found with the same target branch.');
