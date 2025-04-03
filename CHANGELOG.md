@@ -1,3 +1,10 @@
+## [1.15.6](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.5...v1.15.6) (2025-04-03)
+
+
+### Bug Fixes
+
+* **git:** allow unrelated histories during merge to resolve conflicts ([3e64372](https://github.com/tomerh2001/gitlab-merge-request-pipe/commit/3e64372bc9611857a9f0619ac30703993645e1cd))
+
 ## [1.15.5](https://github.com/tomerh2001/gitlab-merge-request-pipe/compare/v1.15.4...v1.15.5) (2025-04-03)
 
 
