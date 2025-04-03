@@ -224,7 +224,7 @@ export async function fetchAll(simpleGit: SimpleGit) {
  */
 export async function createMergeRequest(gitlab: Gitlab, config: any) {
 	try {
-		const {web_url: webUrl} = await gitlab.MergeRequests.create(
+		const mergeRequest = await gitlab.MergeRequests.create(
 			config.projectId,
 			config.sourceBranch,
 			config.targetBranch,
@@ -232,9 +232,17 @@ export async function createMergeRequest(gitlab: Gitlab, config: any) {
 			{
 				removeSourceBranch: true,
 				description: config.mergeDescription,
+				labels: ['gitlab-merge-request-pipe'],
 			},
 		);
-		logger.info(`Merge request created at ${webUrl}`);
+		logger.info(`Merge request created at ${mergeRequest.web_url}`);
+
+		if (config.autoMerge) {
+			await gitlab.MergeRequests.merge(config.projectId, mergeRequest.iid, {
+				shouldRemoveSourceBranch: true,
+			});
+			logger.info(`Auto-merged ${mergeRequest.web_url}`);
+		}
 	} catch (error) {
 		logger.error(error);
 	}
