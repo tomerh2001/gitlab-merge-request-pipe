@@ -231,7 +231,7 @@ export async function createMergeRequest(gitlab: Gitlab, config: any) {
 			{
 				removeSourceBranch: true,
 				description: config.mergeDescription,
-				labels: ['gitlab-merge-request-pipe'],
+				labels: config.labels?.split(',').map((label: string) => label.trim()),
 			},
 		);
 		logger.info(`Merge request created at ${mergeRequest.web_url}`);
@@ -259,6 +259,7 @@ export async function deleteSameTargetMergeRequest(gitlab: Gitlab, config: any) 
 		const mergeRequests = await gitlab.MergeRequests.all({
 			projectId: config.projectId,
 			targetBranch: config.targetBranch,
+			labels: config.labels?.split(',').map((label: string) => label.trim()),
 			state: 'opened',
 		});
 		if (mergeRequests.length === 0) {

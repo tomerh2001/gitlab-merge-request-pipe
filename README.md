@@ -31,6 +31,7 @@ script:
 | GITLAB_TARGET_BRANCH      | Target branch for merge request.           | 'main'                            | No       |
 | GITLAB_DELETE_SAME_TARGET_MERGE_REQUEST | Delete existing merge requests with the same target branch.      | 'false'                           | No       |
 | GITLAB_AUTO_MERGE         | Enable auto-merge for the merge request.   | 'false'                           | No       |
+| GITLAB_MERGE_REQUEST_LABELS | Comma-separated list of labels for the merge request. | -                                 | No       |
 | PUSH_SOURCE_BRANCH        | Push source branch or not.                 | 'true'                            | No       |
 | CREATE_MERGE_REQUEST      | Create a merge request or not.             | 'true'                            | No       |
 | GITLAB_MERGE_DESCRIPTION  | Merge request description.                 | Changelog between last two tags   | No       |
