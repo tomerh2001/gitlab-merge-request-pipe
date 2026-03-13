@@ -15,7 +15,7 @@
     "@semantic-release/release-notes-generator": "^14.0.3",
     "bun-types": "latest",
     "jest": "^29.7.0",
-    "xo": "^0.60.0"
+    "xo": "^1.0.0"
   },
   "peerDependencies": {
     "typescript": "^5.8.2"
